@@ -3,3 +3,6 @@ python-dotenv
 pytest
 flake8
 azure-storage-blob
+pymongo
+pyjwt
+bcrypt
