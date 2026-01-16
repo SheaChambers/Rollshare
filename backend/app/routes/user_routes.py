@@ -2,6 +2,7 @@ from flask import Blueprint, request, make_response, jsonify
 from bson import ObjectId
 import datetime
 import bcrypt
+import os
 import jwt
 from app.db import get_db
 from app.decorators.auth_decorators import jwt_required, admin_required
@@ -10,13 +11,17 @@ from app.decorators.auth_decorators import jwt_required, admin_required
 users_bp = Blueprint("users_bp", __name__)
 
 # Selecting the collections
-db = get_db()
-users = db.users
-blacklist = db.blacklist
+def get_users_collection():
+    return get_db().users
+
+def get_blacklist_collection():
+    return get_db().blacklist
 
 # Register a user
 @users_bp.route("/api/v1.0/users/register", methods=['POST'])
 def register_user():
+    users = get_users_collection()
+
     required_fields = ["username", "email", "password", "confirm_password", "belt_rank"]
     for field in required_fields:
         if field not in request.form:
@@ -59,7 +64,7 @@ def register_user():
             "iat": datetime.datetime.now(datetime.UTC).timestamp(),
             "exp": (datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=1)).timestamp()
         },
-        globals.secret_key,
+        os.getenv("JWT_SECRET_KEY"),
         algorithm="HS256"
     )
 
@@ -74,6 +79,8 @@ def register_user():
 @jwt_required
 @admin_required
 def fetch_all_users(current_user, is_admin):
+    users = get_users_collection()
+
     data_to_return = []
     for user in users.find({}, {"password": 0}): # Exclude passwords
         user["_id"] = str(user["_id"])
@@ -84,6 +91,8 @@ def fetch_all_users(current_user, is_admin):
 @users_bp.route("/api/v1.0/users/<string:id>", methods=['GET'])
 @jwt_required
 def fetch_one_user(id, current_user, is_admin):
+    users = get_users_collection()
+
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid user ID"}), 400)
     
@@ -110,6 +119,8 @@ def fetch_one_user(id, current_user, is_admin):
 @users_bp.route("/api/v1.0/users/me", methods=['GET'])
 @jwt_required
 def get_current_user(current_user, is_admin):
+    users = get_users_collection()
+
     user = users.find_one({"username": current_user}, {"password": 0})
     if not user:
         return make_response(jsonify({"error": "User not found"}), 404)
@@ -121,6 +132,8 @@ def get_current_user(current_user, is_admin):
 @users_bp.route("/api/v1.0/users/<string:id>", methods=['PUT'])
 @jwt_required
 def edit_user(id, current_user, is_admin):
+    users = get_users_collection()
+
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid user ID"}), 400)
     
@@ -153,6 +166,8 @@ def edit_user(id, current_user, is_admin):
 @users_bp.route("/api/v1.0/users/reset-password", methods=['PUT'])
 @jwt_required
 def reset_password(current_user, is_admin):
+    users = get_users_collection()
+
     current_pw = request.form.get("current_password")
     new_pw = request.form.get("new_password")
 
@@ -178,6 +193,8 @@ def reset_password(current_user, is_admin):
 @users_bp.route("/api/v1.0/users/<string:id>", methods=['DELETE'])
 @jwt_required
 def delete_user(id, current_user, is_admin):
+    users = get_users_collection()
+
     if not ObjectId.is_valid(id):
         return make_response(jsonify({"error": "Invalid user ID"}), 400)
     

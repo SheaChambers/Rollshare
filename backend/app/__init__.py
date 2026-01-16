@@ -9,12 +9,15 @@ def create_app():
 
     app = Flask(__name__)
     app.config.from_object(get_config())
+    app.config["MAX_CONTENT_LENGTH"] = 500 * 1024 * 1024
 
     from app.routes.auth_routes import auth_bp
     from app.routes.user_routes import users_bp
 
+
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
+
 
     @app.route("/health")
     def health():
