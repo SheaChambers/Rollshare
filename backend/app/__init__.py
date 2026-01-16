@@ -13,11 +13,11 @@ def create_app():
 
     from app.routes.auth_routes import auth_bp
     from app.routes.user_routes import users_bp
-
+    from app.routes.techniques_routes import techniques_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
-
+    app.register_blueprint(techniques_bp)
 
     @app.route("/health")
     def health():
