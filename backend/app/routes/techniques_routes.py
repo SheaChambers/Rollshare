@@ -101,7 +101,19 @@ def get_all_techniques():
     # Created_by Filter
     if "created_by" in request.args:
         filters["created_by"] = {"$in": request.args.getlist("created_by")}
-
+    # Rating Filtering
+    if "rating" in request.args:
+        filters["rating"] = {"$in": request.args.get("rating")}
+    # Rating range Filtering
+    min_rating = request.args.get("min_rating")
+    max_rating = request.args.get("max_rating")
+    if min_rating or max_rating:
+        rating_filter = {}
+        if min_rating:
+            rating_filter["$gte"] = float(min_rating)
+        if max_rating:
+            rating_filter["$lte"] = float(max_rating)
+        filters["average_Rating"] = rating_filter
 
     # Search
     if request.args.get("q"):
@@ -134,7 +146,8 @@ def get_all_techniques():
     data_to_return = []
     for technique in cursor:
         technique['_id'] = str(technique['_id'])
-
+        for review in technique['reviews']:
+            review['_id'] = str(review['_id'])
         data_to_return.append(technique)
     return make_response( jsonify({
         "pagination": {
@@ -166,6 +179,10 @@ def get_one_technique(id):
         return jsonify({"error": "Not found"}), 404
 
     technique["_id"] = str(technique["_id"])
+
+    if "reviews" in technique:
+        for r in technique["reviews"]:
+            r["_id"] = str(r["_id"])
 
     return jsonify(technique), 200
 
