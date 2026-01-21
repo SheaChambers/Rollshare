@@ -1,0 +1,62 @@
+<div class="auth-container">
+  <div class="auth-tabs">
+    <button type="button" 
+            [class.active]="isLoginMode" 
+            (click)="toggleMode()">Login</button>
+    <button type="button" 
+            [class.active]="!isLoginMode" 
+            (click)="toggleMode()">Register</button>
+  </div>
+
+  <div class="auth-card">
+
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input id="username" formControlName="username" class="form-input">
+        <div class="text-danger" *ngIf="isInvalid('username')">
+          Username is required.
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="!isLoginMode">
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" formControlName="password" class="form-input">
+        <div class="text-danger" *ngIf="isInvalid('password')">
+          Password is required.
+        </div>
+      </div>
+
+      <div class="form-group" *ngIf="!isLoginMode">
+        <label for="confirm_password">Confirm Password</label>
+            <input type="password"
+                id="confirm_password"
+                formControlName="confirm_password"
+                class="form-input">
+      </div>
+
+      <div class="form-group" *ngIf="!isLoginMode">
+        <label for="belt_rank">Belt Rank</label>
+        <div class="belt-grid">
+          <button type="button" 
+                  *ngFor="let belt of ['White', 'Blue', 'Purple', 'Brown', 'Black']"
+                  [class.selected]="authForm.get('belt_rank')?.value === belt"
+                  (click)="authForm.patchValue({belt_rank: belt})">
+            {{ belt }}
+          </button>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" [disabled]="authForm.invalid">
+        {{ isLoginMode ? 'Login' : 'Register' }}
+      </button>
+
+    </form>
+  </div>
+</div>
