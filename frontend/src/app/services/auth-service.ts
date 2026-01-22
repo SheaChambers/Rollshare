@@ -1,4 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
@@ -7,6 +9,12 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthService {
+
+  private platformId = inject(PLATFORM_ID);
+
+  private isBrowser(): Boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   /**
    * The key used to store the authentication token in sessionStorage.
@@ -55,8 +63,10 @@ export class AuthService {
    * @param expired Whether the logout was triggered by token expiration.
    */
   logout(expired: boolean = false) {
-    sessionStorage.removeItem(this.TOKEN_KEY);
-    sessionStorage.removeItem(this.USERNAME_KEY);
+    if (this.isBrowser()) {
+      sessionStorage.removeItem(this.TOKEN_KEY);
+      sessionStorage.removeItem(this.USERNAME_KEY);
+    }
 
     if (expired) {
       this.router.navigate(['/login'], { queryParams: { expired: true } });
@@ -72,6 +82,8 @@ export class AuthService {
    * @returns True if the user is logged in and the token is valid.
    */
   isLoggedIn() {
+    if (!this.isBrowser()) return false;
+
     const token = this.getToken();
     if (!token) return false;
 
@@ -88,7 +100,8 @@ export class AuthService {
    *
    * @returns The username, or null if not stored.
    */
-  getUsername() {
+  getUsername(): string | null {
+    if (!this.isBrowser()) return null;
     return sessionStorage.getItem(this.USERNAME_KEY);
   }
 
@@ -97,7 +110,8 @@ export class AuthService {
    *
    * @returns The token string, or null if not stored.
    */
-  getToken() {
+  getToken(): string | null {
+    if (!this.isBrowser()) return null;
     return sessionStorage.getItem(this.TOKEN_KEY);
   }
 

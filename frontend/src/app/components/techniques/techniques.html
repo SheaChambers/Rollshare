@@ -1,0 +1,20 @@
+<div class="container techniques-container">
+
+    <h1 class="page-title">Techniques Index</h1>
+    <p class="subtitle">Browse and share the Brazilian Jiu Jitsu techniques.</p>
+
+    <button class="btn-add-technique" *ngIf="auth.isLoggedIn()" (click)="addTechnique()">
+        + Add Technique
+    </button>
+
+    <p class="subtitle">Choose a category to explore techniques</p>
+    
+    <div class="category-grid">
+        @for (cat of categories; track cat.value) {
+            <button class="category-card" (click)="goToCategory(cat.value)">
+                <div class="name">{{ cat.label }}</div>
+            </button>
+        }
+    </div>
+
+</div>

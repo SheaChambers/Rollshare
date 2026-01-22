@@ -1,0 +1,60 @@
+.techniques-container {
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 25px;
+}
+
+/* Match the blue from your Login/Register button */
+.btn-add-technique {
+  width: 100%;
+  padding: 12px;
+  background-color: #1f5fbf;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns as per wireframe */
+  gap: 12px;
+}
+
+.category-card {
+  background-color: #e0e0e0; /* The light grey from your wireframe */
+  border: none;
+  border-radius: 12px;
+  padding: 18px 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.category-card .name {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.category-card:active {
+  background-color: #d0d0d0;
+  transform: scale(0.98);
+}

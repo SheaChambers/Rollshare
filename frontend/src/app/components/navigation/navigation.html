@@ -12,10 +12,10 @@
   <div class="menu-header">Menu</div>
   
   <nav class="menu-links">
-    <a routerLink="/" (click)="toggleMenu()">Home (Feed)</a>
-    <a routerLink="/techniques" (click)="toggleMenu()">Techniques</a>
-    <a routerLink="/training" (click)="toggleMenu()">My Training</a>
-    <a routerLink="/community" (click)="toggleMenu()">Community</a>
+    <a [routerLink]="['/']" (click)="toggleMenu()">Home (Feed)</a>
+    <a [routerLink]="['/techniques']" (click)="toggleMenu()">Techniques</a>
+    <a [routerLink]="['/training']" (click)="toggleMenu()">My Training</a>
+    <a [routerLink]="['/community']" (click)="toggleMenu()">Community</a>
     
     <a *ngIf="auth.isLoggedIn()" routerLink="/profile" (click)="toggleMenu()">Profile & Settings</a>
   </nav>
