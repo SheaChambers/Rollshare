@@ -1,0 +1,30 @@
+<header class="top-nav">
+  <div class="logo-placeholder">Logo</div>
+  <h1 class="brand-name">RollShare</h1>
+  <button class="menu-btn" (click)="toggleMenu()">
+    <span class="hamburger-icon"></span>
+    <span class="hamburger-icon"></span>
+    <span class="hamburger-icon"></span>
+  </button>
+</header>
+
+<div class="side-menu" [class.open]="isMenuOpen">
+  <div class="menu-header">Menu</div>
+  
+  <nav class="menu-links">
+    <a routerLink="/" (click)="toggleMenu()">Home (Feed)</a>
+    <a routerLink="/techniques" (click)="toggleMenu()">Techniques</a>
+    <a routerLink="/training" (click)="toggleMenu()">My Training</a>
+    <a routerLink="/community" (click)="toggleMenu()">Community</a>
+    
+    <a *ngIf="auth.isLoggedIn()" routerLink="/profile" (click)="toggleMenu()">Profile & Settings</a>
+  </nav>
+
+  <div class="menu-footer">
+    <hr>
+    <a *ngIf="!auth.isLoggedIn()" class="login-btn" routerLink="/login" (click)="toggleMenu()">Login / Register</a>
+    <button *ngIf="auth.isLoggedIn()" class="logout-btn" (click)="auth.logout(); toggleMenu()">Logout</button>
+  </div>
+</div>
+
+<div class="menu-overlay" *ngIf="isMenuOpen" (click)="toggleMenu()"></div>

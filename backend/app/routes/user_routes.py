@@ -1,0 +1,43 @@
+from flask import Blueprint, request
+from app.controllers.user_controller import (
+    register, get_all_users, get_user_by_id, get_me,
+    update_user_profile, reset_password, remove_user
+)
+from app.decorators.auth_decorators import jwt_required, admin_required
+
+users_bp = Blueprint("users_bp", __name__)
+
+@users_bp.route("/api/v1.0/users/register", methods=["POST"])
+def register_route():
+    return register(request)
+
+@users_bp.route("/api/v1.0/users", methods=["GET"])
+@jwt_required
+@admin_required
+def all_users_route(current_user, is_admin):
+    return get_all_users()
+
+@users_bp.route("/api/v1.0/users/<string:user_id>", methods=["GET"])
+@jwt_required
+def get_user_route(user_id, current_user, is_admin):
+    return get_user_by_id(user_id, current_user, is_admin)
+
+@users_bp.route("/api/v1.0/users/me", methods=["GET"])
+@jwt_required
+def me_route(current_user, is_admin):
+    return get_me(current_user)
+
+@users_bp.route("/api/v1.0/users/<string:user_id>", methods=["PUT"])
+@jwt_required
+def update_user_route(user_id, current_user, is_admin):
+    return update_user_profile(user_id, current_user, is_admin, request)
+
+@users_bp.route("/api/v1.0/users/reset-password", methods=["PUT"])
+@jwt_required
+def reset_pw_route(current_user, is_admin):
+    return reset_password(current_user, request)
+
+@users_bp.route("/api/v1.0/users/<string:user_id>", methods=["DELETE"])
+@jwt_required
+def delete_user_route(user_id, current_user, is_admin):
+    return remove_user(user_id, current_user, is_admin)
