@@ -1,0 +1,13 @@
+<div class="tech-card">
+    
+    <img class="thumb" [src]="technique.thumbnail_url" 
+            (error)=" $event.target.src='assets/images/no-image.jpg' ">
+    
+    <h4 class="name">{{ technique.name }}</h4>
+    
+    <p class="description">{{ technique.description }}</p>
+    
+    <button class="btn-view" (click)="viewTechnique()">
+        View Technique
+    </button>
+</div>

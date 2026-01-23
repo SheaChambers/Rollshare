@@ -1,0 +1,89 @@
+<div class="category-wrapper">
+
+  <h1 class="category-title">{{ category }} Techniques</h1>
+
+  <div class="top-controls">
+
+    <!-- Search -->
+    <input 
+      type="text"
+      class="search-input"
+      placeholder="Search within {{ category }}..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilters()"
+    >
+
+    <!-- Filters button -->
+    <button class="btn-filters" (click)="toggleFilters()">Filters</button>
+  </div>
+
+  <!-- FILTER PANEL -->
+  <div class="filters-panel" *ngIf="filtersOpen">
+
+    <h3 class="filter-title">Filters</h3>
+
+    <!-- Difficulty -->
+    <label class="multi-option" *ngFor="let diff of ['Beginner', 'Intermediate', 'Advanced']">
+      <input type="checkbox" [value]="diff" [(ngModel)]="selectedDifficultiesModel[diff]"
+              (change)="toggleDifficultyModel(diff)">
+      {{ diff }}
+    </label>
+
+    <!-- Tags -->
+    <label class="multi-option">
+      <input type="checkbox" [(ngModel)]="selectedTagsModel.verified" (change)="toggleTagModel('verified')">
+      Verified
+    </label>
+
+    <label class="multi-option">
+      <input type="checkbox" [(ngModel)]="selectedTagsModel.popular" (change)="toggleTagModel('popular')">
+      Popular (10+ reviews)
+    </label>
+
+    <label class="multi-option">
+      <input type="checkbox" [(ngModel)]="selectedTagsModel.highRated" (change)="toggleTagModel('highRated')">
+      Highly Rated (4+)
+    </label>
+
+
+    <!-- Sorting -->
+    <label>Sort By</label>
+    <select class="filter-select" [(ngModel)]="sortBy">
+      <option value="name">A-Z</option>
+      <option value="rating">Highest Rated</option>
+      <option value="popularity">Most Reviewed</option>
+    </select>
+
+    <!-- Buttons -->
+    <div class="filter-buttons">
+      <button class="btn-reset" (click)="resetFilters()">Reset</button>
+      <button class="btn-apply" (click)="applyFilters()">Apply</button>
+    </div>
+
+  </div>
+
+  <div class="technique-grid">
+
+    <app-technique-card *ngFor="let t of filteredTechniques"
+        [technique]="t">
+    </app-technique-card>
+
+  </div>
+
+  <div class="no-results" *ngIf="filteredTechniques.length === 0">
+    No techniques found in this category with the selected filters.
+  </div>
+
+
+  <!-- PAGINATION -->
+  <div class="pagination" *ngIf="totalPages > 1">
+
+    <button class="previous-btn" (click)="previousPage()" [disabled]="page === 1">Previous</button>
+
+    <span>Page {{ page }} of {{ totalPages }}</span>
+
+    <button class="next-btn" (click)="nextPage()" [disabled]="page === totalPages">Next</button>
+
+  </div>
+
+</div>
