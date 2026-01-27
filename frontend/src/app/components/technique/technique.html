@@ -1,0 +1,50 @@
+<div class="mobile-container">
+  <header class="page-header">
+    <h1>Technique: {{ technique?.name }}</h1>
+  </header>
+
+  <div class="video-preview">
+    <div class="video-wrapper" *ngIf="technique?.video_blob_url">
+      <video 
+        *ngIf="videoUrl"
+        [src]="videoUrl"
+        controls 
+        class="main-video"
+        [poster]="thumbnailUrl || 'assets/images/video-placeholder.jpg'">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="video-placeholder" *ngIf="!technique?.video_blob_url">
+      <p>No video available for this technique.</p>
+    </div>
+  </div>
+
+  <div class="action-actions">
+    <button class="btn-ai-upload" (click)="uploadForAI()">
+      + Upload A Video (For AI Feedback)
+    </button>
+    <button class="btn-save-library" (click)="saveToLibrary()">
+      Save Technique to My Library
+    </button>
+  </div>
+
+  <section class="content-tabs">
+    <h2 class="section-subtitle">Related Content & Reviews</h2>
+    
+    <div class="tab-nav">
+      <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">User Reviews</button>
+      <button [class.active]="activeTab === 'attacks'" (click)="activeTab = 'attacks'">Related Attacks</button>
+      <button [class.active]="activeTab === 'defences'" (click)="activeTab = 'defences'">Related Defences</button>
+    </div>
+
+    <div class="tab-content">
+      <div *ngIf="activeTab === 'reviews'">
+        <p>No reviews yet</p>
+      </div>
+      
+      <div *ngIf="activeTab === 'attacks'" class="placeholder-box">
+        <p>Related attacks for <strong>{{ technique?.category }}</strong> will appear here.</p>
+      </div>
+    </div>
+  </section>
+</div>

@@ -9,6 +9,8 @@ from app.models.techniques_model import (
 )
 
 ALLOWED_DIFFICULTIES = ["Beginner", "Intermediate", "Advanced"]
+ALLOWED_CATEGORIES = ["Guard", "Pass", "Sweep", "Takedown", "Submission",
+                      "Escape", "Transition", "Drill", "Movement", "Pin"]
 
 def create(request, current_user: str):
     required_fields = ["name", "category", "difficulty", "description"]
@@ -26,24 +28,36 @@ def create(request, current_user: str):
     difficulty = request.form["difficulty"].strip().capitalize()
     if difficulty not in ALLOWED_DIFFICULTIES:
         return jsonify({"error": f"Invalid difficulty. Must be one of: {ALLOWED_DIFFICULTIES}"}), 400
+    
+    category = request.form["category"].strip()
+    if category not in ALLOWED_CATEGORIES:
+        return jsonify({"error": f"Invalid category. Must be one of: {ALLOWED_CATEGORIES}"}), 400
 
     storage = BlobStorageService()
     blob_name = f"techniques/{uuid.uuid4()}.mp4"
-    video_url = storage.upload_file(video.stream, blob_name, video.content_type)
+    storage.upload_file(video.stream, blob_name, video.content_type)
+
+    thumbnail_blob = storage.generate_video_thumbnail(blob_name)
 
     doc = {
         "name": request.form["name"].strip(),
-        "category": request.form["category"].strip(),
+        "category": category,
         "difficulty": difficulty,
         "description": request.form["description"].strip(),
-        "video_blob_url": video_url,
+        "video_blob_url": blob_name,
+        "thumbnail_blob_url": thumbnail_blob,
         "created_by": current_user,
         "created_at": datetime.datetime.now(datetime.UTC),
         "reviews": []
     }
 
     res = insert_technique(doc)
-    return jsonify({"message": "Technique created successfully", "id": str(res.inserted_id), "video_blob_url": video_url}), 201
+    video_url = storage.generate_read_url(blob_name)
+    thumb_url = storage.generate_read_url(thumbnail_blob)
+    return jsonify({"message": "Technique created successfully", 
+                    "id": str(res.inserted_id), 
+                    "video_blob_url": video_url,
+                    "thumbnail_blob_url": thumb_url}), 201
 
 
 def list_all(request):
@@ -82,9 +96,16 @@ def list_all(request):
 
     cursor = find_many(filters, sort_field, sort_direction, skip, page_size)
 
+    storage = BlobStorageService()
+
     items = []
     for t in cursor:
         t["_id"] = str(t["_id"])
+        if t.get("video_blob_url"):
+            t["video_blob_url"] = storage.generate_read_url(t["video_blob_url"])
+        if t.get("thumbnail_blob_url"):
+            t["thumbnail_blob_url"] = storage.generate_read_url(t["thumbnail_blob_url"])
+
         for r in t.get("reviews", []):
             if "_id" in r:
                 r["_id"] = str(r["_id"])
@@ -106,12 +127,20 @@ def list_all(request):
 
 
 def get_one(technique_id: str):
+    storage = BlobStorageService()
+
     if not ObjectId.is_valid(technique_id):
         return jsonify({"error": "Invalid technique ID"}), 400
 
     t = find_one_by_id(technique_id)
     if not t:
         return jsonify({"error": "Technique not found"}), 404
+
+    if "video_blob_url" in t:
+        t["video_blob_url"] = storage.generate_read_url(t["video_blob_url"])
+    
+    if t.get("thumbnail_blob_url"):
+        t["thumbnail_blob_url"] = storage.generate_read_url(t["thumbnail_blob_url"])
 
     t["_id"] = str(t["_id"])
     for r in t.get("reviews", []):

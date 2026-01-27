@@ -6,3 +6,4 @@ azure-storage-blob
 pymongo
 pyjwt
 bcrypt
+flask-cors

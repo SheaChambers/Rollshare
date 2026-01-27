@@ -1,12 +1,17 @@
 from flask import Flask
+from flask_cors import CORS
 from app.config import get_config
 
-
-
 def create_app():
-
     app = Flask(__name__)
     app.config.from_object(get_config())
+
+    # IMPORTANT: do NOT restrict resources
+    CORS(
+        app,
+        supports_credentials=True,
+        origins=["http://localhost:4200"]
+    )
 
     from app.routes.auth_routes import auth_bp
     from app.routes.user_routes import users_bp

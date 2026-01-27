@@ -1,0 +1,71 @@
+.mobile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 15px;
+  font-family: sans-serif;
+}
+
+.page-header h1 {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+/* Video Wrapper */
+.video-preview {
+  margin-bottom: 20px;
+}
+
+.main-video {
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* Action Buttons */
+.action-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.btn-ai-upload, .btn-save-library {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-ai-upload { background-color: #d1d1d1; }
+.btn-save-library { background-color: #e9e9e9; }
+
+.btn-ai-upload:hover, .btn-save-library:hover {
+  background-color: #bfbfbf;
+}
+
+/* Tabs */
+.tab-nav {
+  display: flex;
+  gap: 8px;
+  margin-top: 15px;
+  overflow-x: auto;
+}
+
+.tab-nav button {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.tab-nav button.active {
+  background: #ccc;
+  font-weight: bold;
+}

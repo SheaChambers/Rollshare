@@ -1,7 +1,7 @@
 <div class="tech-card">
     
-    <img class="thumb" [src]="technique.thumbnail_url" 
-            (error)=" $event.target.src='assets/images/no-image.jpg' ">
+    <img class="thumb" [src]="technique.thumbnail_blob_url || 'assets/images/video-placeholder.jpg' " 
+        alt="{{ technique.name }}">
     
     <h4 class="name">{{ technique.name }}</h4>
     
