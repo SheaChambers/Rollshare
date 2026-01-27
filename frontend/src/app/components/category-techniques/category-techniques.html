@@ -62,7 +62,7 @@
 
   </div>
 
-  <div class="technique-grid">
+  <div class="technique-grid" *ngIf="!isLoading">
 
     <app-technique-card *ngFor="let t of filteredTechniques"
         [technique]="t">
@@ -70,7 +70,7 @@
 
   </div>
 
-  <div class="no-results" *ngIf="filteredTechniques.length === 0">
+  <div class="no-results" *ngIf="!isLoading && filteredTechniques.length === 0">
     No techniques found in this category with the selected filters.
   </div>
 

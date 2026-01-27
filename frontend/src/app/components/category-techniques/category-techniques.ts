@@ -28,6 +28,8 @@ export class CategoryTechniques {
   /** Techniques after applying all frontend filters and sorting */
   filteredTechniques: any[] = [];
 
+  isLoading: boolean = true;
+
   /** Controls the visibility of the filter sidebar */
   filtersOpen = false;
 
@@ -140,6 +142,7 @@ export class CategoryTechniques {
         }
 
         this.applyFrontendFilters();
+        this.isLoading = false;
       });
   }
 

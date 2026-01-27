@@ -1,4 +1,4 @@
-<div class="mobile-container">
+<div class="mobile-container" *ngIf="!isLoading && technique">
   <header class="page-header">
     <h1>Technique: {{ technique?.name }}</h1>
   </header>

@@ -17,6 +17,7 @@ export class Technique implements OnInit {
   activeTab: string = 'reviews';
   videoUrl?: SafeResourceUrl;
   thumbnailUrl?: string;
+  isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,8 +41,9 @@ export class Technique implements OnInit {
           res.video_blob_url
         );
       }
-
       this.thumbnailUrl = res.thumbnail_blob_url || null;
+
+      this.isLoading = false;
     });
 
     this.webService.getReviews(id).subscribe(res => {
