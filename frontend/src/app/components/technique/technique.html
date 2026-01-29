@@ -32,18 +32,34 @@
     <h2 class="section-subtitle">Related Content & Reviews</h2>
     
     <div class="tab-nav">
-      <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">User Reviews</button>
+      <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">User Reviews ({{ reviews.length }})</button>
       <button [class.active]="activeTab === 'attacks'" (click)="activeTab = 'attacks'">Related Attacks</button>
       <button [class.active]="activeTab === 'defences'" (click)="activeTab = 'defences'">Related Defences</button>
     </div>
 
     <div class="tab-content">
       <div *ngIf="activeTab === 'reviews'">
-        <p>No reviews yet</p>
+
+          <app-review-list
+              [reviews]="reviews"
+              (onEdit)="onEditReview($event)"
+              (onDelete)="onDeleteReview($event)">
+          </app-review-list>
+
+          <app-review-form
+              parentType="technique"
+              [parentId]="technique._id"
+              (reviewAdded)="refreshReviews()">
+          </app-review-form>
+
       </div>
       
       <div *ngIf="activeTab === 'attacks'" class="placeholder-box">
         <p>Related attacks for <strong>{{ technique?.category }}</strong> will appear here.</p>
+      </div>
+
+      <div *ngIf="activeTab === 'defences'" class="placeholder-box">
+        <p>Related defences for <strong>{{ technique?.category }}</strong> will appear here.</p>
       </div>
     </div>
   </section>

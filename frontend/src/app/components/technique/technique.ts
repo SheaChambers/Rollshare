@@ -4,16 +4,20 @@ import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { WebService } from '../../services/web-service';
 import { AuthService } from '../../services/auth-service';
+import { ReviewList } from '../shared/review-list/review-list';
+import { ReviewForm } from '../shared/review-form/review-form';
 
 @Component({
   selector: 'app-technique',
-  imports: [CommonModule],
+  imports: [CommonModule, ReviewList, ReviewForm],
   templateUrl: './technique.html',
   styleUrl: './technique.css',
 })
 export class Technique implements OnInit {
   technique: any;
   reviews: any[] = [];
+  reviewForm: any;
+  showReviews = false;
   activeTab: string = 'reviews';
   videoUrl?: SafeResourceUrl;
   thumbnailUrl?: string;
@@ -34,6 +38,8 @@ export class Technique implements OnInit {
   }
 
   loadTechniqueData(id: string) {
+    this.isLoading = true;
+
     this.webService.getTechnique(id).subscribe(res => {
       this.technique = res;
       if (res.video_blob_url) {
@@ -42,13 +48,42 @@ export class Technique implements OnInit {
         );
       }
       this.thumbnailUrl = res.thumbnail_blob_url || null;
-
       this.isLoading = false;
     });
 
     this.webService.getReviews(id).subscribe(res => {
       this.reviews = res;
     });
+  }
+
+  toggleReviews() {
+    this.showReviews = !this.showReviews;
+  }
+
+  /**
+   * Reloads the list of reviews for this technique.
+   */
+  refreshReviews() {
+    if (!this.technique || !this.technique?._id) return;
+
+    this.webService.getReviews(this.technique._id)
+      .subscribe(response => this.reviews = response);
+  }
+
+  /**
+   * Emits an update request for a review and refreshes the list.
+   */
+  onEditReview(updatedReview: any) {
+    this.webService.editReview(this.technique._id, updatedReview._id, updatedReview)
+      .subscribe(() => this.refreshReviews());
+  }
+
+  /**
+   * Deletes a review and refreshes the review list.
+   */
+  onDeleteReview(review: any) {
+    this.webService.deleteReview(this.technique._id, review._id)
+      .subscribe(() => this.refreshReviews());
   }
 
   saveToLibrary() {
