@@ -11,6 +11,8 @@ import { AuthService } from './auth-service';
 })
 export class WebService {
 
+  private baseUrl = 'http://192.168.4.25:5001/api/v1.0/';
+
   /**
    * Creates a new instance of the WebService.
    * @param http The Angular HttpClient used for API requests.
@@ -26,7 +28,7 @@ export class WebService {
    */
   getTechniques(page: number, pageSize: number = 9) {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/techniques?pn=' +
+      this.baseUrl + 'techniques?pn=' +
       page + '&ps=' + pageSize);
   }
 
@@ -37,7 +39,7 @@ export class WebService {
    */
   getTechnique(id: string) {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/techniques/' + id);
+      this.baseUrl + 'techniques/' + id);
   }
 
   /**
@@ -47,7 +49,7 @@ export class WebService {
    */
   getTechniquesSearch(query: string) {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/techniques?q=' + query
+      this.baseUrl + 'techniques?q=' + query
     );
   }
 
@@ -80,7 +82,7 @@ export class WebService {
       }
     
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/techniques', 
+      this.baseUrl + 'techniques', 
       {params}
     );
   }
@@ -99,7 +101,7 @@ export class WebService {
     postData.append("video", technique.videoFile);
     
     return this.http.post<any>(
-      'http://localhost:5001/api/v1.0/techniques', postData,
+      this.baseUrl + 'techniques', postData,
       { headers: this.auth.getAuthHeaders() });
   }
 
@@ -116,7 +118,7 @@ export class WebService {
     }
 
     return this.http.put<any>(
-      'http://localhost:5001/api/v1.0/techniques/' + id,
+      this.baseUrl + 'techniques/' + id,
       formData, { headers: this.auth.getAuthHeaders() }
     );
   }
@@ -128,7 +130,7 @@ export class WebService {
    */
   deleteTechnique(id: string) {
     return this.http.delete<any>(
-      'http://localhost:5001/api/v1.0/techniques/' + id,
+      this.baseUrl + 'techniques/' + id,
       { headers: this.auth.getAuthHeaders() }
     );
   }
@@ -140,7 +142,7 @@ export class WebService {
    */
   getReviews(id: string) {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/techniques/' + 
+      this.baseUrl + 'techniques/' + 
       id + '/reviews');
   }
 
@@ -158,7 +160,7 @@ export class WebService {
     postData.append("comment", review.comment);
 
     return this.http.post<any>(
-      'http://localhost:5001/api/v1.0/techniques/' +
+      this.baseUrl + 'techniques/' +
       id + '/reviews', postData,
       { headers: this.auth.getAuthHeaders() });
   }
@@ -176,7 +178,7 @@ export class WebService {
     formData.append("comment", review.comment);
 
     return this.http.put<any>(
-      'http://localhost:5001/api/v1.0/techniques/' + id 
+      this.baseUrl + 'techniques/' + id 
       + '/reviews/' + reviewId,
       formData,
       { headers: this.auth.getAuthHeaders() }
@@ -191,7 +193,7 @@ export class WebService {
    */
   deleteReview(id: string, reviewId: string) {
     return this.http.delete<any>(
-      'http://localhost:5001/api/v1.0/techniques/' + id
+      this.baseUrl + 'techniques/' + id
       + '/reviews/' + reviewId,
       { headers: this.auth.getAuthHeaders() }
     );
@@ -223,7 +225,7 @@ export class WebService {
     }
 
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/gyms',
+      this.baseUrl + 'gyms',
       { params }
     );
   }
@@ -235,7 +237,7 @@ export class WebService {
    */
   getGym(id: string) {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id
+      this.baseUrl + 'gyms/' + id
     );
   }
 
@@ -266,7 +268,7 @@ export class WebService {
     }
 
     return this.http.post<any>(
-      'http://localhost:5001/api/v1.0/gyms',
+      this.baseUrl + 'gyms',
       formData,
       { headers: this.auth.getAuthHeaders() }
     );
@@ -285,7 +287,7 @@ export class WebService {
     }
 
     return this.http.put<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id,
+      this.baseUrl + 'gyms/' + id,
       formData, { headers: this.auth.getAuthHeaders() }
     );
   }
@@ -297,7 +299,7 @@ export class WebService {
    */
   deleteGym(id: string) {
     return this.http.delete<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id,
+      this.baseUrl + 'gyms/' + id,
       { headers: this.auth.getAuthHeaders() }
     );
   }
@@ -316,7 +318,7 @@ export class WebService {
     }
 
     return this.http.post(
-      'http://localhost:5001/api/v1.0/gyms/' + id + '/photos',
+      this.baseUrl + 'gyms/' + id + '/photos',
       formData, { headers: this.auth.getAuthHeaders() }
     );
   }
@@ -344,7 +346,7 @@ export class WebService {
    */
   getGymReviews(id: string) {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id + '/reviews'
+      this.baseUrl + 'gyms/' + id + '/reviews'
     );
   }
 

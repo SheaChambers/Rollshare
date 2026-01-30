@@ -1,0 +1,60 @@
+<div class="new-technique-container">
+  <div class="header-section">
+    <h1>New Technique</h1>
+    <p>Upload your footage to the RollShare library.</p>
+  </div>
+
+  <form [formGroup]="techniqueForm" (ngSubmit)="onSubmit()" class="technique-form">
+    
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" formControlName="name" class="form-control" placeholder="e.g., Kimura from Side Control">
+      <small class="error-text" *ngIf="isInvalid('name')">Title is required (min 3 chars).</small>
+    </div>
+
+    <div class="row">
+      <div class="form-group flex-1">
+        <label>Category</label>
+        <select formControlName="category" class="form-control">
+          <option value="">Select...</option>
+          <option *ngFor="let c of allowedCategories" [value]="c.value">{{c.label}}</option>
+        </select>
+      </div>
+      <div class="form-group flex-1">
+        <label>Difficulty</label>
+        <select formControlName="difficulty" class="form-control">
+          <option value="">Select...</option>
+          <option *ngFor="let d of allowedDifficulties" [value]="d">{{d}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <textarea formControlName="description" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Video File (.mp4)</label>
+      <div class="file-upload-wrapper">
+        <input type="file" (change)="onFileSelected($event)" accept="video/mp4" id="video-upload" hidden>
+        <label for="video-upload" class="btn-file">
+          {{ selectedFile ? selectedFile.name : 'Choose Video' }}
+        </label>
+      </div>
+    </div>
+
+    <div class="preview-area" *ngIf="videoPreview">
+      <video [src]="videoPreview" controls class="main-video"></video>
+    </div>
+
+    <div class="error-box" *ngIf="backendError">{{ backendError }}</div>
+
+    <div class="action-row">
+      <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn-submit" [disabled]="isSubmitting || techniqueForm.invalid">
+        {{ isSubmitting ? 'Uploading...' : 'Upload Technique' }}
+      </button>
+    </div>
+  </form>
+</div>

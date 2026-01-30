@@ -12,6 +12,8 @@ export class AuthService {
 
   private platformId = inject(PLATFORM_ID);
 
+  private baseUrl = 'http://192.168.4.25:5001/api/v1.0/';
+
   private isBrowser(): Boolean {
     return isPlatformBrowser(this.platformId);
   }
@@ -46,7 +48,7 @@ export class AuthService {
     formData.append('password', credentials.password);
 
     return this.http.post<any>(
-      'http://localhost:5001/api/v1.0/login',
+      this.baseUrl + 'login',
       formData
     ).pipe(
       tap(response => {

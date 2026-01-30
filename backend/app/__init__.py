@@ -10,7 +10,8 @@ def create_app():
     CORS(
         app,
         supports_credentials=True,
-        origins=["http://localhost:4200"]
+        origins=["http://localhost:4200",
+                 "http://192.168.4.25:4200"]
     )
 
     from app.routes.auth_routes import auth_bp

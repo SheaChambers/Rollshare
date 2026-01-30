@@ -3,11 +3,18 @@ import { AuthComponent } from './components/auth/auth';
 import { Techniques } from './components/techniques/techniques';
 import { CategoryTechniques } from './components/category-techniques/category-techniques';
 import { Technique } from './components/technique/technique';
+import { NewTechnique } from './components/new-technique/new-technique';
+import { authGuard } from './guards/auth-guard-guard';
 
 export const routes: Routes = [
     {
         path: 'login',
         component: AuthComponent
+    },
+    {
+        path: 'techniques/new',
+        component: NewTechnique,
+        canActivate: [authGuard]
     },
     {
         path: 'techniques',
