@@ -5,11 +5,39 @@
   font-family: sans-serif;
 }
 
-.page-header h1 {
-  font-size: 1.4rem;
-  margin-bottom: 10px;
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
+}
+
+.page-header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  border-bottom: none;
+  padding-bottom: 0;
+  color: #333;
+}
+
+.btn-edit {
+  background: #1f5fbf;
+  border: 1px solid #1f5fbf;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 /* Video Wrapper */

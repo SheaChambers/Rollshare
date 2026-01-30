@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { WebService } from '../../services/web-service';
@@ -9,7 +9,7 @@ import { ReviewForm } from '../shared/review-form/review-form';
 
 @Component({
   selector: 'app-technique',
-  imports: [CommonModule, ReviewList, ReviewForm],
+  imports: [RouterModule, CommonModule, ReviewList, ReviewForm],
   templateUrl: './technique.html',
   styleUrl: './technique.css',
 })

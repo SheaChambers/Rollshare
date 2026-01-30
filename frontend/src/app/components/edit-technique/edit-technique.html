@@ -1,0 +1,96 @@
+<div class="edit-technique-container">
+
+    <div class="form-header">
+        <div>
+            <h1 class="page-title">Edit Technique</h1>
+            <p class="subtitle">Update details for this technique</p>
+        </div>
+
+        <button class="btn-delete" type="button" (click)="openDeleteConfirm()">
+            Delete
+        </button>
+    </div>
+
+    <div *ngIf="!authorised" class="alert alert-danger">
+        You are not authorised to edit this technique.
+    </div>
+
+    <form class="technique-form" *ngIf="authorised" [formGroup]="editForm" (ngSubmit)="updateTechnique()">
+
+        <div class="form-group">
+            <label>Technique Name</label>
+            <input class="form-input" type="text" formControlName="name">
+            <div class="error" *ngIf="isInvalid('name')">
+                Name must be between 3 and 50 characters.
+            </div>
+        </div>
+
+        <!-- CATEGORY -->
+        <div class="form-group">
+            <label>Category</label>
+            <select class="form-input" formControlName="category">
+                <option value="">Select Category</option>
+                <option *ngFor="let c of allowedCategories" [value]="c.value">{{ c.label }}</option>
+            </select>
+            <div class="error" *ngIf="isInvalid('category')">
+                Category is required.
+            </div>
+        </div>
+
+        <!-- DIFFICULTY -->
+        <div class="form-group">
+            <label>Difficulty</label>
+            <select class="form-input" formControlName="difficulty">
+                <option value="">Select difficulty</option>
+                <option *ngFor="let d of allowedDifficulties" [value]="d">{{ d }}</option>
+            </select>
+            <div class="error" *ngIf="isInvalid('difficulty')">
+                Difficulty is required.
+            </div>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-input textarea" formControlName="description"></textarea>
+            <div class="error" *ngIf="isInvalid('description')">
+                Description must be between 10 and 500 characters.
+            </div>
+        </div>
+
+        <!-- MEDIA URL + PREVIEW -->
+        <div class="form-group">
+            <label>Update Technique Video (Optional)</label>
+            <input class="form-input" type="file" (change)="onFileSelected($event)" accept="video/*">
+            <p class="file-hint">Leave blank to keep the current video.</p>
+        </div>
+
+        <!-- BACKEND ERRORS -->
+        <div class="backend-error" *ngIf="backendError">
+            {{ backendError }}
+        </div>
+
+        <div class="button-row">
+            <button class="btn-cancel" type="button" (click)="cancel()">
+                Cancel
+            </button>
+
+            <!-- SUBMIT -->
+            <button class="btn-submit" type="submit" [disabled]="editForm.invalid">
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="modal-backdrop" *ngIf="confirmDelete">
+  <div class="modal-box">
+    <h2>Delete Technique?</h2>
+    <p>This action cannot be undone.</p>
+
+    <div class="modal-buttons">
+      <button class="btn-cancel-modal" (click)="confirmDelete = false">Cancel</button>
+      <button class="btn-delete-confirm" (click)="deleteTechnique()">Delete</button>
+    </div>
+  </div>
+</div>

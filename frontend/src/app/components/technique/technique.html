@@ -1,6 +1,11 @@
 <div class="mobile-container" *ngIf="!isLoading && technique">
   <header class="page-header">
     <h1>Technique: {{ technique?.name }}</h1>
+
+    <button class="btn-edit" *ngIf="auth.isLoggedIn() && (auth.isAdmin() || technique?.created_by === auth.getUsername())"
+            [routerLink]="['/techniques', technique?._id, 'edit']">
+      Edit
+    </button>
   </header>
 
   <div class="video-preview">

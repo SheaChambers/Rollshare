@@ -117,6 +117,10 @@ export class WebService {
       formData.append(key, data[key]);
     }
 
+    if (data.videoFile) {
+      formData.append("video", data.videoFile);
+    }
+
     return this.http.put<any>(
       this.baseUrl + 'techniques/' + id,
       formData, { headers: this.auth.getAuthHeaders() }
