@@ -6,6 +6,7 @@ import { Technique } from './components/technique/technique';
 import { NewTechnique } from './components/new-technique/new-technique';
 import { EditTechnique } from './components/edit-technique/edit-technique';
 import { authGuard } from './guards/auth-guard-guard';
+import { ProfileComponent } from './components/profile/profile';
 
 export const routes: Routes = [
     {
@@ -31,6 +32,12 @@ export const routes: Routes = [
     },
     {
         path: 'techniques/:id/edit',
-        component: EditTechnique
+        component: EditTechnique,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'profile',
+        component: ProfileComponent,
+        canActivate: [authGuard]
     }
 ];

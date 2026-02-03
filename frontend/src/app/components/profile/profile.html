@@ -1,0 +1,114 @@
+<div class="mobile-container">
+  
+  <div *ngIf="!isEditing">
+    <header class="page-header">
+      <h1 class="page-title">Profile & Settings</h1>
+    </header>
+
+    <div class="user-info-card">
+      <div class="avatar-circle"></div>
+      <div class="user-details">
+        <h2>{{ userData.username }}</h2>
+        <p>{{ userData.belt_rank }} | Joined {{ userData.created_at | date: 'yyyy' }}</p>
+      </div>
+    </div>
+
+    <div class="menu-list">
+      <button class="menu-item" (click)="isEditing = true">
+        Edit Profile & Belt Rank <span>></span>
+      </button>
+      <button class="menu-item">
+        Security & Settings <span>></span>
+      </button>
+    </div>
+
+    <div class="danger-zone">
+      <button class="btn-logout" (click)="logout()">Logout</button>
+      <button class="btn-delete-account" (click)="showDeleteModal = true">Delete Account</button>
+    </div>
+  </div>
+
+  <div *ngIf="isEditing">
+    <header class="page-header">
+      <h1 class="page-title">Edit Profile</h1>
+      <button class="btn-done" (click)="isEditing = false">Done</button>
+    </header>
+
+    <div class="edit-avatar-section">
+      <div class="avatar-circle">
+        <img *ngIf="userData?.avatar_url" [src]="userData.avatar_url" class="avatar-img">
+      </div>
+      <button type="button" class="text-link">Change Avatar</button>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="saveChanges()" class="edit-form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" formControlName="username" class="form-input"
+              [class.input-error]="isInvalid('username')">
+        <div class="error-message" *ngIf="isInvalid('username')">
+          Please enter a valid username (min. 3 characters).
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" class="form-input"
+              [class.input-error]="isInvalid('email')">
+        <div class="error-message" *ngIf="isInvalid('email')">
+          A valid email is required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Belt Rank</label>
+        <select formControlName="belt_rank" class="form-input">
+          <option *ngFor="let r of belt_ranks" [value]="r">{{ r }}</option>
+        </select>
+      </div>
+
+      <div class="error-alert" *ngIf="backendError">
+        {{ backendError }}
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="profileForm.invalid || profileForm.pristine">
+        Save Changes
+      </button>
+      
+      <div class="footer-links">
+        <button type="button" class="text-link" (click)="showPasswordModal = true">Change Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showPasswordModal">
+  <div class="modal-box">
+    <h2>Change Password</h2>
+    <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+      <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" formControlName="current_password" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>New Password</label>
+        <input type="password" formControlName="new_password" class="form-input">
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="btn-cancel-modal" (click)="showPasswordModal = false">Cancel</button>
+        <button type="submit" class="btn-submit" [disabled]="passwordForm.invalid">Update Password</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" *ngIf="showDeleteModal">
+  <div class="modal-box">
+    <h2>Permanently Delete?</h2>
+    <p>This will erase all your training data and history. This cannot be undone.</p>
+    <div class="modal-buttons">
+      <button class="btn-cancel-modal" (click)="showDeleteModal = false">Cancel</button>
+      <button class="btn-delete-confirm" (click)="deleteAccount()">Delete Forever</button>
+    </div>
+  </div>
+</div>
