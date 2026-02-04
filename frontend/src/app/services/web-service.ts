@@ -335,7 +335,7 @@ export class WebService {
    */
   deleteGymPhoto(id: string, photo: string) {
     return this.http.delete<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id + '/photos',
+      this.baseUrl + 'gyms/' + id + '/photos',
       { 
         body: { photo }, 
         headers: this.auth.getAuthHeaders()
@@ -368,7 +368,7 @@ export class WebService {
     postData.append("comment", review.comment);
 
     return this.http.post<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id + '/reviews',
+      this.baseUrl + 'gyms/' + id + '/reviews',
       postData,
       { headers: this.auth.getAuthHeaders() }
     );
@@ -387,7 +387,7 @@ export class WebService {
     formData.append("comment", review.comment);
 
     return this.http.put<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id 
+      this.baseUrl + 'gyms/' + id 
       + '/reviews/' + reviewId,
       formData,
       { headers: this.auth.getAuthHeaders() }
@@ -402,7 +402,7 @@ export class WebService {
    */
   deleteGymReview(id: string, reviewId: string) {
     return this.http.delete<any>(
-      'http://localhost:5001/api/v1.0/gyms/' + id
+      this.baseUrl + 'gyms/' + id
       + '/reviews/' + reviewId,
       { headers: this.auth.getAuthHeaders() }
     );
@@ -423,7 +423,7 @@ export class WebService {
     postData.append("confirm_password", credentials.confirm_password);
 
     return this.http.post<any>(
-      'http://localhost:5001/api/v1.0/users/register',
+      this.baseUrl + 'users/register',
       postData
     );
   }
@@ -434,7 +434,7 @@ export class WebService {
    */
   getCurrentUser() {
     return this.http.get<any>(
-      'http://localhost:5001/api/v1.0/users/me',
+      this.baseUrl + 'users/me',
       { headers: this.auth.getAuthHeaders() }
     );
   }
@@ -450,7 +450,7 @@ export class WebService {
     Object.keys(data).forEach(key => formData.append(key, data[key]));
 
     return this.http.put<any>(
-      'http://localhost:5001/api/v1.0/users/' + id,
+      this.baseUrl + 'users/' + id,
       formData,
       { headers: this.auth.getAuthHeaders() }
     );
@@ -463,7 +463,7 @@ export class WebService {
    */
   deleteUser(id: string) {
     return this.http.delete<any>(
-      'http://localhost:5001/api/v1.0/users/' + id,
+      this.baseUrl + 'users/' + id,
       { headers: this.auth.getAuthHeaders() }
     )
   }
@@ -479,7 +479,7 @@ export class WebService {
     formData.append('new_password', data.new_password);
 
     return this.http.put<any>(
-      'http://localhost:5001/api/v1.0/users/reset-password',
+      this.baseUrl + 'users/reset-password',
       formData,
       { headers: this.auth.getAuthHeaders() }
     )
