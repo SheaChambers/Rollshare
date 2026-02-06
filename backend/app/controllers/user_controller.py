@@ -8,7 +8,7 @@ import os
 from app.models.user_model import (
     find_by_username, find_by_email, insert_user, list_users, 
     users_col, update_user, delete_user, add_saved_technique,
-    get_saved_technique, remove_saved_technique
+    get_saved_techniques, remove_saved_technique
 )
 from app.models.techniques_model import (techniques_col)
 
@@ -179,19 +179,29 @@ def save_technique(user_id, request):
     return jsonify({"message": "Technique saved"}), 200
 
 
-def get_saved_techniques(user_id):
-    user = find_by_username(user_id)
+def get_saved_techniques_controller(username):
+    user = find_by_username(username)
     if not user:
         return jsonify({"error": "User not found"}), 400
     
     saved_ids = user.get("saved_techniques", [])
 
+    if not saved_ids:
+        return jsonify([]), 200
+
     techniques = get_saved_techniques(saved_ids)
 
     for t in techniques:
-        t["_id"] = str(t["_id"])
-        if "created_at" in t:
-            t["created_at"] = t["created_at"].isoformat()
+        if t:
+            t["_id"] = str(t["_id"])
+            if "reviews" in t and isinstance(t["reviews"], list):
+                for review in t["reviews"]:
+                    if "_id" in review:
+                        review["_id"] = str(review["_id"])
+                    if "user_id" in review:
+                        review["user_id"] = str(review["user_id"])
+            if "created_at" in t:
+                t["created_at"] = t["created_at"].isoformat()
     
     return jsonify(techniques), 200
 

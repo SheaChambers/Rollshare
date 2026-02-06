@@ -42,6 +42,11 @@ export class Technique implements OnInit {
 
     this.webService.getTechnique(id).subscribe(res => {
       this.technique = res;
+
+      if (this.auth.isLoggedIn()) {
+        this.checkIfSaved(id);
+      }
+
       if (res.video_blob_url) {
         this.videoUrl = this.sanitiser.bypassSecurityTrustResourceUrl(
           res.video_blob_url
@@ -84,6 +89,15 @@ export class Technique implements OnInit {
   onDeleteReview(review: any) {
     this.webService.deleteReview(this.technique._id, review._id)
       .subscribe(() => this.refreshReviews());
+  }
+
+  checkIfSaved(techniqueId: string) {
+    this.webService.getSavedTechniques().subscribe({
+      next: (savedTechniques: any[]) => {
+        this.technique.isSaved = savedTechniques.some(t => t._id == techniqueId);
+      },
+      error: (err) => console.error("Could not verify saved status", err)
+    });
   }
 
   saveToLibrary() {

@@ -1,3 +1,4 @@
+from bson import ObjectId
 from app.db import get_db
 from app.models.techniques_model import techniques_col
 
@@ -37,10 +38,11 @@ def add_saved_technique(user_id, technique_id):
         {"$addToSet": {"saved_techniques": technique_id}}
     )
 
-def get_saved_technique(user_id):
-    return techniques_col().find_one(
-        {"_id": {"$in": user_id.get("saved_techniques", [] )}}
-    )
+def get_saved_techniques(id_list):
+    query_ids = [ObjectId(tid) for tid in id_list]
+    return list(techniques_col().find(
+        {"_id": {"$in": query_ids}}
+    ))
 
 def remove_saved_technique(user_id, technique_id):
     return users_col().update_one(
