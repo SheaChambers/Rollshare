@@ -484,4 +484,29 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  saveTechnique(techniqueId: string) {
+    const body = { technique_id: techniqueId };
+
+    return this.http.post<any>(
+      this.baseUrl + 'users/me/saved-techniques',
+      body,
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  getSavedTechniques() {
+    return this.http.get<any>(
+      this.baseUrl + 'users/me/saved-techniques',
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  unsaveTechnique(techniqueId: string) {
+    return this.http.delete<any>(
+      this.baseUrl + 'users/me/saved-techniques/' +
+      techniqueId,
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

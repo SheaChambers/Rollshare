@@ -7,8 +7,10 @@ import os
 
 from app.models.user_model import (
     find_by_username, find_by_email, insert_user, list_users, 
-    users_col, update_user, delete_user
+    users_col, update_user, delete_user, add_saved_technique,
+    get_saved_technique, remove_saved_technique
 )
+from app.models.techniques_model import (techniques_col)
 
 def register(request):
     required_fields = ["username", "email", "password", "confirm_password", "belt_rank"]
@@ -37,6 +39,7 @@ def register(request):
         "belt_rank": request.form["belt_rank"].strip(),
         "bio": request.form.get("bio", "").strip(),
         "admin": False,
+        "saved_techniques": [],
         "created_at": datetime.datetime.now(datetime.UTC),
     }
 
@@ -160,5 +163,41 @@ def remove_user(user_id: str, requester: str, is_admin: bool):
     res = delete_user(ObjectId(user_id))
     if res.deleted_count == 0:
         return jsonify({"error": "Deletion failed"}), 500
+
+    return jsonify({}), 204
+
+
+def save_technique(user_id, request):
+    user = find_by_username(user_id)
+    technique_id = request.json.get("technique_id")
+
+    if not ObjectId.is_valid(technique_id):
+        return jsonify({"error": "Invalid technique ID"}), 400
+    
+    add_saved_technique(user["_id"], technique_id)
+
+    return jsonify({"message": "Technique saved"}), 200
+
+
+def get_saved_techniques(user_id):
+    user = find_by_username(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 400
+    
+    saved_ids = user.get("saved_techniques", [])
+
+    techniques = get_saved_techniques(saved_ids)
+
+    for t in techniques:
+        t["_id"] = str(t["_id"])
+        if "created_at" in t:
+            t["created_at"] = t["created_at"].isoformat()
+    
+    return jsonify(techniques), 200
+
+
+def unsave_technique(user_id, technique_id):
+    user = find_by_username(user_id)
+    remove_saved_technique(user["_id"], technique_id)
 
     return jsonify({}), 204

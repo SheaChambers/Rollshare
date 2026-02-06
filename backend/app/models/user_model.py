@@ -1,4 +1,5 @@
 from app.db import get_db
+from app.models.techniques_model import techniques_col
 
 def users_col():
     return get_db().users
@@ -29,3 +30,20 @@ def add_blacklist_token(token: str):
 
 def token_is_blacklisted(token: str) -> bool:
     return blacklist_col().find_one({"token": token}) is not None
+
+def add_saved_technique(user_id, technique_id):
+    return users_col().update_one(
+        {"_id": user_id},
+        {"$addToSet": {"saved_techniques": technique_id}}
+    )
+
+def get_saved_technique(user_id):
+    return techniques_col().find_one(
+        {"_id": {"$in": user_id.get("saved_techniques", [] )}}
+    )
+
+def remove_saved_technique(user_id, technique_id):
+    return users_col().update_one(
+        {"_id": user_id},
+        {"$pull": {"saved_techniques": technique_id}}
+    )

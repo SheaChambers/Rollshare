@@ -1,7 +1,8 @@
 from flask import Blueprint, request
 from app.controllers.user_controller import (
     register, get_all_users, get_user_by_id, get_me,
-    update_user_profile, reset_password, remove_user
+    update_user_profile, reset_password, remove_user,
+    save_technique, get_saved_techniques, unsave_technique
 )
 from app.decorators.auth_decorators import jwt_required, admin_required
 
@@ -41,3 +42,18 @@ def reset_pw_route(current_user, is_admin):
 @jwt_required
 def delete_user_route(user_id, current_user, is_admin):
     return remove_user(user_id, current_user, is_admin)
+
+@users_bp.route("/api/v1.0/users/me/saved-techniques", methods=["POST"])
+@jwt_required
+def saved_tech_route(current_user, is_admin):
+    return save_technique(current_user, request)
+
+@users_bp.route("/api/v1.0/users/me/saved-techniques", methods=["GET"])
+@jwt_required
+def get_saved_techs_route(current_user, is_admin):
+    return get_saved_techniques(current_user)
+
+@users_bp.route("/api/v1.0/users/me/saved-techniques/<string:technique_id>", methods=["DELETE"])
+@jwt_required
+def unsave_tech_route(technique_id, current_user, is_admin):
+    return unsave_technique(current_user, technique_id)

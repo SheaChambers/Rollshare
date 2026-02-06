@@ -28,8 +28,11 @@
     <button class="btn-ai-upload" (click)="uploadForAI()">
       + Upload A Video (For AI Feedback)
     </button>
-    <button class="btn-save-library" (click)="saveToLibrary()">
+    <button *ngIf="!technique?.isSaved" class="btn-save-library" (click)="saveToLibrary()">
       Save Technique to My Library
+    </button>
+    <button *ngIf="technique?.isSaved" class="btn-save-library" (click)="unsaveFromLibrary()">
+      Saved
     </button>
   </div>
 

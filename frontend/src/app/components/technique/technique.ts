@@ -87,8 +87,27 @@ export class Technique implements OnInit {
   }
 
   saveToLibrary() {
-    // Placeholder for future implementation
-    alert('Technique saved to your library!');
+    if (!this.auth.isLoggedIn) {
+      alert("Please log in to save techniques!");
+      return;
+    }
+
+    this.webService.saveTechnique(this.technique._id)
+      .subscribe({next: () => {
+        this.technique.isSaved = true;
+        alert('Technique saved to your library!');
+      },
+      error: (err) => console.error("Error saving technique", err)
+    });
+  }
+
+  unsaveFromLibrary() {
+    this.webService.unsaveTechnique(this.technique._id).subscribe({
+      next: () => {
+        this.technique.isSaved = false;
+        alert("Removed from library");
+      }
+    });
   }
 
   uploadForAI() {
