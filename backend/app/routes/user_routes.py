@@ -2,7 +2,8 @@ from flask import Blueprint, request
 from app.controllers.user_controller import (
     register, get_all_users, get_user_by_id, get_me,
     update_user_profile, reset_password, remove_user,
-    save_technique, get_saved_techniques_controller, unsave_technique
+    save_technique, get_saved_techniques_controller, unsave_technique,
+    get_user_rolls
 )
 from app.decorators.auth_decorators import jwt_required, admin_required
 
@@ -57,3 +58,8 @@ def get_saved_techs_route(current_user, is_admin):
 @jwt_required
 def unsave_tech_route(technique_id, current_user, is_admin):
     return unsave_technique(current_user, technique_id)
+
+@users_bp.route("/api/v1.0/users/me/rolls", methods=["GET"])
+@jwt_required
+def get_my_rolls(current_user, is_admin):
+    return get_user_rolls(current_user)

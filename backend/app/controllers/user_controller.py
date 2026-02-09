@@ -5,10 +5,11 @@ from bson import ObjectId
 from flask import jsonify
 import os
 
+from app.services.blob_storage_service import BlobStorageService
 from app.models.user_model import (
     find_by_username, find_by_email, insert_user, list_users, 
     users_col, update_user, delete_user, add_saved_technique,
-    get_saved_techniques, remove_saved_technique
+    get_saved_techniques, remove_saved_technique, get_techniques_by_user
 )
 from app.models.techniques_model import (techniques_col)
 
@@ -191,17 +192,21 @@ def get_saved_techniques_controller(username):
 
     techniques = get_saved_techniques(saved_ids)
 
-    for t in techniques:
-        if t:
-            t["_id"] = str(t["_id"])
-            if "reviews" in t and isinstance(t["reviews"], list):
-                for review in t["reviews"]:
-                    if "_id" in review:
-                        review["_id"] = str(review["_id"])
-                    if "user_id" in review:
-                        review["user_id"] = str(review["user_id"])
-            if "created_at" in t:
-                t["created_at"] = t["created_at"].isoformat()
+    storage = BlobStorageService()
+
+    for roll in techniques:
+        roll["_id"] = str(roll["_id"])
+
+        if roll.get("thumbnail_blob_url"):
+            roll["thumbnail_blob_url"] = storage.generate_read_url(roll["thumbnail_blob_url"])
+        
+        if roll.get("video_blob_url"):
+            roll["video_blob_url"] = storage.generate_read_url(roll["video_blob_url"])
+
+        if "reviews" in roll:
+            for review in roll["reviews"]:
+                if "_id" in review:
+                    review["_id"] = str(review["_id"])
     
     return jsonify(techniques), 200
 
@@ -211,3 +216,31 @@ def unsave_technique(user_id, technique_id):
     remove_saved_technique(user["_id"], technique_id)
 
     return jsonify({}), 204
+
+def get_user_rolls(username):
+    user = find_by_username(username)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    techniques = get_techniques_by_user(username)
+
+    storage = BlobStorageService()
+
+    rolls = []
+    for roll in techniques:
+        roll["_id"] = str(roll["_id"])
+
+        if roll.get("thumbnail_blob_url"):
+            roll["thumbnail_blob_url"] = storage.generate_read_url(roll["thumbnail_blob_url"])
+        
+        if roll.get("video_blob_url"):
+            roll["video_blob_url"] = storage.generate_read_url(roll["video_blob_url"])
+
+        if "reviews" in roll:
+            for review in roll["reviews"]:
+                if "_id" in review:
+                    review["_id"] = str(review["_id"])
+        
+        rolls.append(roll)
+    
+    return jsonify({"techniques": rolls}), 200

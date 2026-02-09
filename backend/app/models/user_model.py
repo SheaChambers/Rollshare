@@ -49,3 +49,8 @@ def remove_saved_technique(user_id, technique_id):
         {"_id": user_id},
         {"$pull": {"saved_techniques": technique_id}}
     )
+
+def get_techniques_by_user(username):
+    return list(techniques_col().find(
+        {"created_by": username}
+    ))

@@ -1,0 +1,60 @@
+<div class="training-container">
+
+    <header class="page-header">    
+        <h1>My Training</h1>
+    </header>
+
+    <div class="training-tabs">
+        <button type="button" 
+                [class.active]="isMyRollsMode" 
+                (click)="toggleMode()">My Rolls</button>
+        <button type="button" 
+                [class.active]="!isMyRollsMode" 
+                (click)="toggleMode()">Saved Techniques</button>
+    </div>
+
+    <div *ngIf="isMyRollsMode">
+
+        <div class="filter-bar">
+            <button class="filter-btn" (click)="toggleFilters()">Active Filter: Last 7 Days</button>
+        </div>
+
+        <div class="filters-panel" *ngIf="filtersOpen">
+
+            <h3 class="filter-title">Filters</h3>
+
+            <!-- Sorting -->
+            <label>Sort By</label>
+            <select class="filter-select" [(ngModel)]="sortBy">
+                <option value="recent">Most Recent</option>
+                <option value="name">A-Z</option>
+                <option value="rating">Highest Rated</option>
+                <option value="popularity">Most Reviewed</option>
+            </select>
+
+            <!-- Buttons -->
+            <div class="filter-buttons">
+                <button class="btn-reset" (click)="resetFilters()">Reset</button>
+                <button class="btn-apply" (click)="applyFilters()">Apply</button>
+            </div>
+
+        </div>
+
+        <div class="technique-grid">
+            <app-technique-card 
+                *ngFor="let technique of filteredRolls"
+                [technique]="technique"
+                [buttonText]="'View AI Anlysis & Video'">
+            </app-technique-card>
+        </div>
+    </div>
+
+    <div *ngIf="!isMyRollsMode">
+        <div class="technique-grid">
+            <app-technique-card 
+                *ngFor="let technique of displayTechniques"
+                [technique]="technique">
+            </app-technique-card>
+        </div>
+    </div>
+</div>

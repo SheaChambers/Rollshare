@@ -509,4 +509,11 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  getMyRolls() {
+    return this.http.get<any>(
+      this.baseUrl + 'users/me/rolls',
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

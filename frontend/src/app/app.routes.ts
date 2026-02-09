@@ -7,6 +7,7 @@ import { NewTechnique } from './components/new-technique/new-technique';
 import { EditTechnique } from './components/edit-technique/edit-technique';
 import { authGuard } from './guards/auth-guard-guard';
 import { ProfileComponent } from './components/profile/profile';
+import { MyTraining } from './components/my-training/my-training';
 
 export const routes: Routes = [
     {
@@ -38,6 +39,11 @@ export const routes: Routes = [
     {
         path: 'profile',
         component: ProfileComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'training',
+        component: MyTraining,
         canActivate: [authGuard]
     }
 ];

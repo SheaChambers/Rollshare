@@ -19,6 +19,9 @@ export class TechniqueCard {
   /** Technique object containing title, image, metadata, etc. */
   @Input() technique: any;
 
+  /** Allows for parent components to change the button text */
+  @Input() buttonText: string = 'View Technique';
+
   /**
    * Injects Angular router to enable navigation to technique detail page.
    */
