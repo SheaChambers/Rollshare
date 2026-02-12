@@ -516,4 +516,12 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  update_settings(data: any) {
+    return this.http.put<any>(
+      this.baseUrl + 'users/me/settings',
+      data,
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

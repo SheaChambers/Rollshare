@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, Form } from '@angular/forms';
 import { AuthService } from '../../services/auth-service';
 import { WebService } from '../../services/web-service';
 import { Router } from '@angular/router';
@@ -14,7 +14,9 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   isEditing = false;
+  isEditingSettings = false;
   profileForm!: FormGroup;
+  settingsForm!: FormGroup;
   userData: any;
   showPasswordModal = false;
   passwordForm!: FormGroup;
@@ -22,6 +24,7 @@ export class ProfileComponent implements OnInit {
   backendError: any;
 
   belt_ranks = ['White Belt', 'Blue Belt', 'Purple Belt', 'Brown Belt', 'Black Belt'];
+  themes = ['light', 'dark'];
 
   constructor(
     public auth: AuthService,
@@ -42,6 +45,12 @@ export class ProfileComponent implements OnInit {
       new_password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
+    this.settingsForm = this.fb.group({
+      theme: ['light'],
+      email_notifications: [true],
+      profile_visibility: ['public']
+    })
+
     this.webService.getCurrentUser().subscribe({
       next: (data: any) => {
         this.userData = data;
@@ -51,6 +60,13 @@ export class ProfileComponent implements OnInit {
           email: data.email,
           belt_rank: data.belt_rank
         });
+
+        this.settingsForm.patchValue({
+          theme: data.settings?.preferences?.theme,
+          email_notifications: data.settings?.preferences?.email_notifications,
+          profile_visibility: data.settings?.privacy?.profile_visibility ?? 'public'
+        });
+
       },
       error: (err) => {
         this.backendError = "Unable to fetch profile data";
@@ -85,6 +101,18 @@ export class ProfileComponent implements OnInit {
         this.router.navigate(['/login']);
       },
       error: (err) => this.backendError = err.error.error
+    });
+  }
+
+  saveSettings() {
+    this.webService.update_settings(this.settingsForm.value).subscribe({
+      next: () => {
+        this.isEditingSettings = false;
+        console.log("Settings updated");
+      },
+      error: (err) => {
+        this.backendError = err.error?.error || "Update failed";
+      }
     });
   }
 

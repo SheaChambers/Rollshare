@@ -42,6 +42,21 @@ def register(request):
         "admin": False,
         "saved_techniques": [],
         "created_at": datetime.datetime.now(datetime.UTC),
+
+        "settings": {
+            "security": {
+                "two_factor_enabled": False,
+                "two_factor_secret": None,
+                "login_history": []
+            },
+            "privacy": {
+                "profile_visibility": "public"
+            },
+            "preferences": {
+                "email_notifications": True,
+                "theme": "light"
+            }
+        }
     }
 
     insert_user(new_user)
@@ -244,3 +259,45 @@ def get_user_rolls(username):
         rolls.append(roll)
     
     return jsonify({"techniques": rolls}), 200
+
+
+def get_settings(requester):
+    user = find_by_username(requester)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    return jsonify({user.get("settings", {})}), 200
+
+
+def update_settings(requester, request):
+    user = find_by_username(requester)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Invalid request body"}), 400
+    
+    update_fields = {}
+
+    if "theme" in data:
+        if data["theme"] not in ["light", "dark"]:
+            return jsonify({"error": "Invalid theme value"}), 400
+        update_fields["settings.preferences.theme"] = data["theme"]
+    
+    if "email_notifications" in data:
+        if not isinstance(data["email_notifications"], bool):
+            return jsonify({"error": "email_notifications must be boolean"}), 400
+        update_fields["settings.preferences.email_notifications"] = data["email_notifications"]
+
+    if "profile_visibility" in data:
+        if data["profile_visibility"] not in ["public", "private"]:
+            return jsonify({"error": "Invalid profile_visibility value"}), 400
+        update_fields["settings.privacy.profile_visibility"] = data["profile_visibility"]
+    
+    if not update_fields:
+        return jsonify({"error": "No valid preference fields provided"}), 400
+    
+    update_user(user["_id"], update_fields)
+
+    return jsonify({"message": "Preferences updated"}), 200
