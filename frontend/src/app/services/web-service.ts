@@ -524,4 +524,30 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  enable2FA() {
+    return this.http.post<any>(
+      this.baseUrl + 'users/me/2fa/enable',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  verify2FASetup(code: string) {
+    return this.http.post<any>(
+      this.baseUrl + 'users/me/2fa/verify',
+      { code: code },
+      { headers: this.auth.getAuthHeaders() 
+          .set('Content-Type', 'application/json')
+      }
+    );
+  }
+
+  disable2FA() {
+    return this.http.post<any>(
+      this.baseUrl + 'users/me/2fa/disable',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

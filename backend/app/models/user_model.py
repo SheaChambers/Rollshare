@@ -54,3 +54,15 @@ def get_techniques_by_user(username):
     return list(techniques_col().find(
         {"created_by": username}
     ))
+
+def push_login_history(user_id, entry):
+    return users_col().update_one(
+        {"_id": user_id},
+        {
+            "$push": {
+                "settings.security.login_history": {
+                    "$each": [entry],
+                    "$slice": -10
+                }
+            }
+        })

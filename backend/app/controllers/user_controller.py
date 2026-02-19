@@ -4,6 +4,7 @@ import jwt
 from bson import ObjectId
 from flask import jsonify
 import os
+import pyotp
 
 from app.services.blob_storage_service import BlobStorageService
 from app.models.user_model import (
@@ -266,7 +267,7 @@ def get_settings(requester):
     if not user:
         return jsonify({"error": "User not found"}), 404
     
-    return jsonify({user.get("settings", {})}), 200
+    return jsonify(user.get("settings", {})), 200
 
 
 def update_settings(requester, request):
@@ -301,3 +302,69 @@ def update_settings(requester, request):
     update_user(user["_id"], update_fields)
 
     return jsonify({"message": "Preferences updated"}), 200
+
+def enable_2fa(requester):
+    user = find_by_username(requester)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    security = user.get("settings", {}).get("security", {})
+    existing_secret = security.get("two_factor_secret")
+    enabled = security.get("two_factor_enabled", False)
+
+    if enabled:
+        return jsonify({"error": "2FA already enabled"}), 400
+    
+    secret = existing_secret or pyotp.random_base32()
+
+    if not existing_secret:
+        update_user(user["_id"], {
+            "settings.security.two_factor_secret": secret,
+            "settings.security.two_factor_enabled": False
+        })
+
+    totp = pyotp.TOTP(secret)
+    provisioning_uri = totp.provisioning_uri(
+        name=user["email"],
+        issuer_name="RollShare"
+    )
+
+    return jsonify({
+        "provisioning_uri": provisioning_uri
+    }), 200
+
+
+def verify_2fa_setup(requester, request):
+    user = find_by_username(requester)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    code = request.json.get("code")
+    secret = user.get("settings", {}).get("security", {}).get("two_factor_secret")
+
+    if not secret:
+        return jsonify({"error": "2FA not initiated"}), 400
+    
+    totp = pyotp.TOTP(secret)
+
+    if not totp.verify(code, valid_window=1):
+        return jsonify({"error": "Invalid verification code"}), 400
+    
+    update_user(user["_id"], {
+        "settings.security.two_factor_enabled": True
+    })
+
+    return jsonify({"message": "2FA successfully enabled"}), 200
+
+
+def disable_2fa(requester):
+    user = find_by_username(requester)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    update_user(user["_id"], {
+        "settings.security.two_factor_enabled": False,
+        "settings.security.two_factor_secret": None
+    })
+
+    return jsonify({"message": "2FA disabled"}), 200

@@ -14,7 +14,12 @@ import { WebService } from '../../services/web-service';
 })
 export class AuthComponent implements OnInit {
   authForm!: FormGroup;
+  twoFaForm!: FormGroup;
+
   isLoginMode = true;
+  requires2FA = false;
+  tempUsername: string | null = null;
+
   backendError: string | null = null;
   sessionExpired = false;
 
@@ -28,6 +33,10 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     this.initForm();
+
+    this.twoFaForm = this.fb.group({
+      code: ['', [Validators.required, Validators.minLength(6)]]
+    });
 
     this.route.queryParams.subscribe(params => {
       if (params['expired']) this.sessionExpired = true;
@@ -96,7 +105,16 @@ export class AuthComponent implements OnInit {
 
     if (this.isLoginMode) {
       this.auth.login({ username: formData.username, password: formData.password }).subscribe({
-        next: () => this.router.navigate(['/techniques']),
+        next: (response: any) => {
+
+          if (response.required_2fa) {
+            this.requires2FA = true;
+            this.tempUsername = formData.username;
+            return;
+          }
+          
+          this.router.navigate(['/techniques']);
+        },
         error: (err) => this.backendError = err.error?.error || "Invalid credentials"
       });
     } else {
@@ -108,5 +126,20 @@ export class AuthComponent implements OnInit {
         error: (err) => this.backendError = err.error?.error || "Registration failed"
       });
     }
+  }
+
+  verify2FA() {
+    if (this.twoFaForm.invalid || !this.tempUsername) return;
+
+    this.auth.verify2FA({
+      username: this.tempUsername,
+      code: this.twoFaForm.value.code
+    }).subscribe({
+      next: () => {
+        this.router.navigate(['/techniques']);
+      },
+      error: (err) =>
+        this.backendError = err.error?.error || "Invalid 2FA code"
+    });
   }
 }

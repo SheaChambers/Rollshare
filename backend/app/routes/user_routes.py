@@ -3,7 +3,8 @@ from app.controllers.user_controller import (
     register, get_all_users, get_user_by_id, get_me,
     update_user_profile, reset_password, remove_user,
     save_technique, get_saved_techniques_controller, unsave_technique,
-    get_user_rolls, get_settings, update_settings
+    get_user_rolls, get_settings, update_settings,
+    enable_2fa, verify_2fa_setup, disable_2fa
 )
 from app.decorators.auth_decorators import jwt_required, admin_required
 
@@ -73,3 +74,18 @@ def get_settings_route(current_user, is_admin):
 @jwt_required
 def update_settings_route(current_user, is_admin):
     return update_settings(current_user, request)
+
+@users_bp.route("/api/v1.0/users/me/2fa/enable", methods=["POST"])
+@jwt_required
+def enable_2fa_route(current_user, is_admin):
+    return enable_2fa(current_user)
+
+@users_bp.route("/api/v1.0/users/me/2fa/verify", methods=["POST"])
+@jwt_required
+def verify_2fa_route(current_user, is_admin):
+    return verify_2fa_setup(current_user, request)
+
+@users_bp.route("/api/v1.0/users/me/2fa/disable", methods=["POST"])
+@jwt_required
+def disable_2fa_route(current_user, is_admin):
+    return disable_2fa(current_user)

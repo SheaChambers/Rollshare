@@ -15,11 +15,19 @@ import { Router } from '@angular/router';
 export class ProfileComponent implements OnInit {
   isEditing = false;
   isEditingSettings = false;
+  twoFactorEnabled = false;
+
   profileForm!: FormGroup;
   settingsForm!: FormGroup;
-  userData: any;
-  showPasswordModal = false;
   passwordForm!: FormGroup;
+  twoFaForm!: FormGroup;
+
+  userData: any;
+  provisioningUri: string | null = null;
+  manualSecret: string | null = null;
+  show2FASetup = false;
+  twoFactorSetupInProgress = false;
+  showPasswordModal = false;
   showDeleteModal = false;
   backendError: any;
 
@@ -51,6 +59,10 @@ export class ProfileComponent implements OnInit {
       profile_visibility: ['public']
     })
 
+    this.twoFaForm = this.fb.group({
+      code: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
     this.webService.getCurrentUser().subscribe({
       next: (data: any) => {
         this.userData = data;
@@ -67,6 +79,28 @@ export class ProfileComponent implements OnInit {
           profile_visibility: data.settings?.privacy?.profile_visibility ?? 'public'
         });
 
+        const setupOpen = sessionStorage.getItem('2fa_setup_open') === 'true';
+
+        const security = data.settings?.security ?? {};
+        this.twoFactorEnabled = security.two_factor_enabled ?? false;
+
+        this.twoFactorSetupInProgress =
+          !this.twoFactorEnabled && !!security.two_factor_secret;
+
+        if (setupOpen && this.twoFactorSetupInProgress) {
+          this.isEditingSettings = true;
+          this.show2FASetup = true;
+
+          this.webService.enable2FA().subscribe({
+            next: (response) => {
+              this.provisioningUri = response.provisioning_uri;
+              const url = new URL(response.provisioning_uri);
+              this.manualSecret = url.searchParams.get("secret");
+            }
+          });
+        } else {
+          this.show2FASetup = false;
+        }
       },
       error: (err) => {
         this.backendError = "Unable to fetch profile data";
@@ -113,6 +147,48 @@ export class ProfileComponent implements OnInit {
       error: (err) => {
         this.backendError = err.error?.error || "Update failed";
       }
+    });
+  }
+
+  start2FASetup() {
+    this.webService.enable2FA().subscribe({
+      next: (response) => {
+        
+        this.provisioningUri = response.provisioning_uri;
+        
+        const url = new URL(response.provisioning_uri);
+        this.manualSecret = url.searchParams.get("secret");
+
+        this.show2FASetup = true;
+        this.isEditingSettings = true;
+
+        sessionStorage.setItem('2fa_setup_open', 'true');
+      },
+      error: (err) =>
+        this.backendError = err.error?.error || "Could not start 2FA setup"
+    });
+  }
+
+  verify2FASetup() {
+    if (this.twoFaForm.invalid) return;
+
+    this.webService.verify2FASetup(this.twoFaForm.value.code).subscribe({
+      next: () => {
+        this.twoFactorEnabled = true;
+        this.show2FASetup = false;
+      },
+      error: (err) =>
+        this.backendError = err.error?.error || "Invalid code"
+    });
+  }
+
+  disable2FA() {
+    this.webService.disable2FA().subscribe({
+      next: () => {
+        this.twoFactorEnabled = false;
+      },
+      error: (err) =>
+        this.backendError = err.error?.error || "Could not disable 2FA"
     });
   }
 

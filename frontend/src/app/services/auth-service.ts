@@ -52,8 +52,11 @@ export class AuthService {
       formData
     ).pipe(
       tap(response => {
-        sessionStorage.setItem(this.TOKEN_KEY, response.token);
-        sessionStorage.setItem(this.USERNAME_KEY, credentials.username);
+
+        if (response.token) {
+          sessionStorage.setItem(this.TOKEN_KEY, response.token);
+          sessionStorage.setItem(this.USERNAME_KEY, credentials.username);
+        }
       })
     );
   }
@@ -132,7 +135,7 @@ export class AuthService {
     }
 
     return new HttpHeaders({
-        'x-access-token': token
+      'x-access-token': token
     });
   }
 
@@ -175,5 +178,24 @@ export class AuthService {
 
     const decoded = this.decodeToken(token);
     return decoded?.admin === true;
+  }
+
+  /**
+   * Allows the user to verify their login through Two-Factor
+   * Authentication.
+   * @returns True if the user passes the authentication.
+   */
+  verify2FA(data: any) {
+    return this.http.post<any>(
+      this.baseUrl + 'auth/2fa-login',
+      data
+    ).pipe(
+      tap(response => {
+        if (response.token) {
+          sessionStorage.setItem(this.TOKEN_KEY, response.token);
+          sessionStorage.setItem(this.USERNAME_KEY, data.username);
+        }
+      })
+    );
   }
 }

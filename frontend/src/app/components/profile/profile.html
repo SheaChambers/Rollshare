@@ -98,6 +98,32 @@
       </div>
 
       <div class="form-group">
+        <label>Two-Factor Authentication (2FA)</label>
+        <div *ngIf="!twoFactorEnabled && !twoFactorSetupInProgress">
+          <button type="button" class="btn-enable" (click)="start2FASetup()">
+            Enable 2FA
+          </button>
+        </div>
+
+        <div *ngIf="twoFactorEnabled">
+          <p class="twoFAEnabled">
+            2FA is enabled
+          </p>
+          <button type="button" class="btn-disable" (click)="disable2FA()">
+            Disable 2FA
+          </button>
+        </div>
+
+        <div *ngIf="!twoFactorEnabled && twoFactorSetupInProgress">
+          <button type="button"
+                  class="btn-submit"
+                  (click)="start2FASetup()">
+            Finish 2FA Setup
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label>Theme</label>
         <select formControlName="theme" class="form-input">
           <option *ngFor="let t of themes" [value]="t">{{ t }}</option>
@@ -119,6 +145,46 @@
         Save Changes
       </button>
     </form>
+
+    <div class="modal-backdrop" *ngIf="show2FASetup">
+
+      <div class="modal-box">
+
+        <p><strong>Option 1:</strong> Tap to open in Authenticator</p>
+
+        <a *ngIf="provisioningUri"
+          [href]="provisioningUri"
+          class="btn-submit">
+          Open Authenticator
+        </a>
+
+        <p>
+          <strong>Option 2:</strong> Enter this key manually:
+        </p>
+
+        <div>
+          {{ manualSecret }}
+        </div>
+
+        <form [formGroup]="twoFaForm"
+              (ngSubmit)="verify2FASetup()">
+
+          <div class="form-group">
+            <label>Enter 6-digit code</label>
+            <input type="text"
+                  formControlName="code"
+                  class="form-input">
+          </div>
+
+          <button type="submit"
+                  class="btn-submit"
+                  [disabled]="twoFaForm.invalid">
+            Verify & Enable
+          </button>
+
+        </form>
+      </div>
+    </div>
   </div>
 </div>
 

@@ -16,7 +16,7 @@ def jwt_required(func):
         try:
             data = jwt.decode(
                 token,
-                os.getenv("JWT_SECRET_KEY"),
+                os.getenv("JWT_SECRET_KEY", "dev-secret-change-me"),
                 algorithms=["HS256"]
             )
         except jwt.ExpiredSignatureError:

@@ -325,3 +325,34 @@ select.form-input {
     transform: translateY(0);
   }
 }
+
+.btn-enable {
+  width: 100%;
+  padding: 14px;
+  background-color: #1f5fbf;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.twoFAEnabled {
+  color: green;
+  font-weight: bold;
+}
+
+.btn-disable {
+  width: 100%;
+  padding: 14px;
+  background-color: #d62828;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin-top: 8px;
+  cursor: pointer;
+}
