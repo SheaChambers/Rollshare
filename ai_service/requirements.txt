@@ -2,5 +2,5 @@ torch
 opencv-python
 numpy
 scikit-learn
-fastpi
+fastapi
 uvicorn
