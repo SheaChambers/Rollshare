@@ -32,6 +32,23 @@ jobs:
           pip install flake8
           # Check for critical syntax/logic errors
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+      
+      - name: Install AI dependencies
+        run: |
+          # If ai_service has its own requirements, install them here
+          if [ -f ai_service/requirements.txt ]; then pip install -r ai_service/requirements.txt; fi
+        
+      - name: Debug and Run backend tests
+        working-directory: backend
+        env:
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          echo "Current Directory: $(pwd)"
+          echo "Workspace Root: ${{ github.workspace }}"
+          echo "Listing Root Content:"
+          ls -R ..
+          pip install pytest
+          pytest
 
       - name: Run backend tests
         working-directory: backend
@@ -40,11 +57,7 @@ jobs:
         run: |
           pip install pytest
           if [ -d "tests" ]; then pytest; else echo "No tests found"; fi
-      
-      - name: Install AI dependencies
-        run: |
-          # If ai_service has its own requirements, install them here
-          if [ -f ai_service/requirements.txt ]; then pip install -r ai_service/requirements.txt; fi
+
 
   # JOB 2: Frontend Validation (Angular)
   frontend-ci:
