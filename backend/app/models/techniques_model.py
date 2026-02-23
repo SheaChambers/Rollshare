@@ -48,3 +48,11 @@ def pull_review(technique_id: str, review_id: str):
         {"_id": ObjectId(technique_id)},
         {"$pull": {"reviews": {"_id": ObjectId(review_id)}}}
     )
+
+def update_analysis_results(technique_id: str, status: str, results: dict = None):
+    return techniques_col().update_one(
+        {"_id": ObjectId(technique_id)},
+        {"$set": {"analysis_status": status, 
+                  "analysis": results}
+        }
+    )

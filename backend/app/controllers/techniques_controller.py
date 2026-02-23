@@ -2,15 +2,17 @@ import datetime
 import uuid
 from bson import ObjectId
 from flask import jsonify
+import threading
 
 from app.services.blob_storage_service import BlobStorageService
 from app.models.techniques_model import (
     insert_technique, count, find_many, find_one_by_id, update_by_id, delete_by_id
 )
+from app.controllers.video_analyser_controller import analyse_video_task
 
 ALLOWED_DIFFICULTIES = ["Beginner", "Intermediate", "Advanced"]
 ALLOWED_CATEGORIES = ["Guard", "Pass", "Sweep", "Takedown", "Submission",
-                      "Escape", "Transition", "Drill", "Movement", "Pin"]
+                      "Escape", "Transition", "Drill", "Pin", "Roll"]
 
 def create(request, current_user: str):
     required_fields = ["name", "category", "difficulty", "description"]
@@ -48,12 +50,16 @@ def create(request, current_user: str):
         "thumbnail_blob_url": thumbnail_blob,
         "created_by": current_user,
         "created_at": datetime.datetime.now(datetime.UTC),
+        "analysis_status": "not_requested",
+        "analysis": None,
         "reviews": []
     }
 
     res = insert_technique(doc)
+
     video_url = storage.generate_read_url(blob_name)
     thumb_url = storage.generate_read_url(thumbnail_blob)
+
     return jsonify({"message": "Technique created successfully", 
                     "id": str(res.inserted_id), 
                     "video_blob_url": video_url,
