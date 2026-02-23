@@ -35,9 +35,16 @@ jobs:
 
       - name: Run backend tests
         working-directory: backend
+        env:
+          PYTHONPATH: ${{ github.workspace }}
         run: |
           pip install pytest
           if [ -d "tests" ]; then pytest; else echo "No tests found"; fi
+      
+      - name: Install AI dependencies
+        run: |
+          # If ai_service has its own requirements, install them here
+          if [ -f ai_service/requirements.txt ]; then pip install -r ai_service/requirements.txt; fi
 
   # JOB 2: Frontend Validation (Angular)
   frontend-ci:
