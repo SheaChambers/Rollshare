@@ -28,8 +28,8 @@ export class NewTechnique implements OnInit {
     { label: 'Escapes', value: 'Escape'},
     { label: 'Transitions', value: 'Transition'},
     { label: 'Drills', value: 'Drill'},
-    { label: 'Movements', value: 'Movement'},
-    { label: 'Pinnings', value: 'Pinning'}
+    { label: 'Pins', value: 'Pin'},
+    { label: 'Rolls', value: 'Roll'}
   ];
 
   allowedDifficulties = ['Beginner', 'Intermediate', 'Advanced'];

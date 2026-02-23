@@ -27,8 +27,8 @@ export class Techniques {
     { label: 'Escapes', value: 'Escape'},
     { label: 'Transitions', value: 'Transition'},
     { label: 'Drills', value: 'Drill'},
-    { label: 'Movements', value: 'Movement'},
-    { label: 'Pinnings', value: 'Pinning'}
+    { label: 'Pins', value: 'Pin'},
+    { label: 'Rolls', value: 'Roll'}
   ];
 
   /** User search input tied to query params */
