@@ -4,14 +4,17 @@ from ultralytics import YOLO
 import joblib
 from pathlib import Path
 from collections import Counter
+import ai_service
 
 def analyse_video(video_path):
 
     # ===== CONFIG =====
-    MODEL_PATH = r"C:\\Users\\sheac\\Documents\\Projects\\Rollshare\\ai_service\\ai_service\\models\\pose_random_forest_tuned.pkl"
-    FEATURES_NPZ = r"C:\\Users\\sheac\\Documents\\Projects\\Rollshare\\ai-service\\ai_service\\featues\\train_cls_features_v3.npz"
+    BASE_DIR = Path(ai_service.__file__).resolve().parent
+    MODEL_PATH = BASE_DIR / "models" / "pose_random_forest_tuned.pkl"
+    FEATURES_NPZ = BASE_DIR / "features" / "train_cls_features_v3.npz"
     SMOOTH_WINDOW = 5
     STATE_CONFIRM_FRAMES = 4
+    MIN_SEGMENT_SECONDS = 0.0
     # ===================
 
     pose_model = YOLO("yolov8n-pose.pt")
@@ -232,4 +235,41 @@ def analyse_video(video_path):
         "end_s": len(final_states) / fps
     })
 
-    return segments
+    # ---------- Group + Top 3 ----------
+
+    position_totals = {}
+    total_duration = 0
+
+    for seg in segments:
+        duration = seg["end_s"] - seg["start_s"]
+        if duration < MIN_SEGMENT_SECONDS:
+            continue
+
+        total_duration += duration
+        position_totals[seg["position"]] = (
+            position_totals.get(seg["position"], 0) + duration
+        )
+
+    if total_duration == 0:
+        return {
+            "timeline": segments,
+            "distribution": {},
+            "top_positions": []
+        }
+
+    distribution = {
+        pos: round((dur / total_duration) * 100, 1)
+        for pos, dur in position_totals.items()
+    }
+
+    top_positions = sorted(
+        distribution.items(),
+        key=lambda x: x[1],
+        reverse=True
+    )[:3]
+
+    return {
+        "timeline": segments,
+        "distribution": distribution,
+        "top_positions": top_positions
+    }

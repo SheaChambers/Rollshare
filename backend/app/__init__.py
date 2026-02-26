@@ -20,6 +20,7 @@ def create_app():
     from app.routes.reviews_routes import reviews_bp
     from app.routes.gyms_routes import gyms_bp
     from app.routes.gym_reviews_routes import gym_reviews_bp
+    from app.routes.video_analyser_routes import video_analyser_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(users_bp)
@@ -27,6 +28,7 @@ def create_app():
     app.register_blueprint(reviews_bp)
     app.register_blueprint(gyms_bp)
     app.register_blueprint(gym_reviews_bp)
+    app.register_blueprint(video_analyser_bp)
 
     @app.route("/health")
     def health():

@@ -5,11 +5,12 @@ import threading
 
 from app.services.blob_storage_service import BlobStorageService
 from app.models.techniques_model import find_one_by_id, update_analysis_results
-from ai_service.inference.predict_video_position_v2 import analyse_video
-from ai_service.feedback.feedback_engine import generate_feedback
+
 
 
 def analyse_video_task(technique_id: str):
+    from ai_service.inference.predict_video_position_v2 import analyse_video
+    from ai_service.feedback.feedback_engine import generate_feedback
     blob_service = BlobStorageService()
 
     video_doc = find_one_by_id(technique_id)
@@ -21,11 +22,13 @@ def analyse_video_task(technique_id: str):
             video_doc["video_blob_url"], minutes=30
         )
 
-        segments = analyse_video(video_url)
-        feedback = generate_feedback(segments)
+        analysis_data = analyse_video(video_url)
+        feedback = generate_feedback(analysis_data)
 
-        results = {
-            "segments": segments,
+        analysis = {
+            "timeline": analysis_data["timeline"],
+            "distribution": analysis_data["distribution"],
+            "top_positions": analysis_data["top_positions"],
             "feedback": feedback,
             "analysed_at": datetime.datetime.now(datetime.UTC)
         }
@@ -33,7 +36,7 @@ def analyse_video_task(technique_id: str):
         update_analysis_results(
             technique_id,
             "analysed",
-            results
+            analysis
         )
 
     except Exception as e:

@@ -550,4 +550,12 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  requestAIAnalysis(techniqueId: string) {
+    return this.http.post<any>(
+      this.baseUrl + 'techniques/' + techniqueId + '/analyse',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    );
+  }
 }

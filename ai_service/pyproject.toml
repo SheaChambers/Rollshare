@@ -11,3 +11,9 @@ packages = ["ai_service"]
 
 [tool.setuptools.package-dir]
 ai_service = "ai_service"
+
+[tool.setuptools.package-data]
+ai_service = [
+    "models/*.pkl",
+    "features/*.npz"
+]

@@ -8,66 +8,150 @@
     </button>
   </header>
 
-  <div class="video-preview">
-    <div class="video-wrapper" *ngIf="technique?.video_blob_url">
-      <video 
-        *ngIf="videoUrl"
-        [src]="videoUrl"
-        controls 
-        class="main-video"
-        [poster]="thumbnailUrl || 'assets/images/video-placeholder.jpg'">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div class="video-placeholder" *ngIf="!technique?.video_blob_url">
-      <p>No video available for this technique.</p>
-    </div>
+  <div class="main-tab-nav">
+    <button [class.active]="activeMainTab === 'details'" (click)="activeMainTab = 'details'">Details</button>
+    <button [class.active]="activeMainTab === 'ai'" (click)="activeMainTab = 'ai'">AI Analysis</button>
   </div>
 
-  <div class="action-actions">
-    <button class="btn-ai-upload" (click)="uploadForAI()">
-      + Upload A Video (For AI Feedback)
-    </button>
-    <button *ngIf="!technique?.isSaved" class="btn-save-library" (click)="saveToLibrary()">
-      Save Technique to My Library
-    </button>
-    <button *ngIf="technique?.isSaved" class="btn-save-library" (click)="unsaveFromLibrary()">
-      Saved
-    </button>
-  </div>
+  <section class="tab-content">
 
-  <section class="content-tabs">
-    <h2 class="section-subtitle">Related Content & Reviews</h2>
-    
-    <div class="tab-nav">
-      <button [class.active]="activeTab === 'reviews'" (click)="activeTab = 'reviews'">User Reviews ({{ reviews.length }})</button>
-      <button [class.active]="activeTab === 'attacks'" (click)="activeTab = 'attacks'">Related Attacks</button>
-      <button [class.active]="activeTab === 'defences'" (click)="activeTab = 'defences'">Related Defences</button>
+    <div class="details-view" *ngIf="activeMainTab === 'details'">
+
+      <div class="video-preview">
+        <div class="video-wrapper" *ngIf="technique?.video_blob_url">
+          <video 
+            *ngIf="videoUrl"
+            [src]="videoUrl"
+            controls 
+            class="main-video"
+            [poster]="thumbnailUrl || 'assets/images/video-placeholder.jpg'">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="video-placeholder" *ngIf="!technique?.video_blob_url">
+          <p>No video available for this technique.</p>
+        </div>
+      </div>
+
+      <div class="action-actions">
+        <ng-container *ngIf="technique?.created_by !== auth.getUsername()">
+          <button *ngIf="!technique?.isSaved" class="btn-save-library" (click)="saveToLibrary()">
+            Save Technique to My Library
+          </button>
+          <button *ngIf="technique?.isSaved" class="btn-save-library" (click)="unsaveFromLibrary()">
+            Saved
+          </button>
+        </ng-container>
+      </div>
+
+      <section class="content-tabs">
+        <h2 class="section-subtitle">Related Content & Reviews</h2>
+        
+        <div class="content-tab-nav">
+          <button [class.active]="activeContentTab === 'reviews'" (click)="activeContentTab = 'reviews'">User Reviews ({{ reviews.length }})</button>
+          <button [class.active]="activeContentTab === 'attacks'" (click)="activeContentTab = 'attacks'">Related Attacks</button>
+          <button [class.active]="activeContentTab === 'defences'" (click)="activeContentTab = 'defences'">Related Defences</button>
+        </div>
+
+        <div class="tab-content">
+          <div *ngIf="activeContentTab === 'reviews'">
+
+              <app-review-list
+                  [reviews]="reviews"
+                  (onEdit)="onEditReview($event)"
+                  (onDelete)="onDeleteReview($event)">
+              </app-review-list>
+
+              <app-review-form
+                  parentType="technique"
+                  [parentId]="technique._id"
+                  (reviewAdded)="refreshReviews()">
+              </app-review-form>
+
+          </div>
+          
+          <div *ngIf="activeContentTab === 'attacks'" class="placeholder-box">
+            <p>Related attacks for <strong>{{ technique?.category }}</strong> will appear here.</p>
+          </div>
+
+          <div *ngIf="activeContentTab === 'defences'" class="placeholder-box">
+            <p>Related defences for <strong>{{ technique?.category }}</strong> will appear here.</p>
+          </div>
+        </div>
+      </section>
     </div>
 
-    <div class="tab-content">
-      <div *ngIf="activeTab === 'reviews'">
+    <div class="ai-view" *ngIf="activeMainTab === 'ai'">
 
-          <app-review-list
-              [reviews]="reviews"
-              (onEdit)="onEditReview($event)"
-              (onDelete)="onDeleteReview($event)">
-          </app-review-list>
-
-          <app-review-form
-              parentType="technique"
-              [parentId]="technique._id"
-              (reviewAdded)="refreshReviews()">
-          </app-review-form>
-
-      </div>
-      
-      <div *ngIf="activeTab === 'attacks'" class="placeholder-box">
-        <p>Related attacks for <strong>{{ technique?.category }}</strong> will appear here.</p>
+      <!-- NOT REQUESTED -->
+      <div class="empty-ai" *ngIf="technique?.analysis_status === 'not_requested'">
+        <p>No AI analysis yet.</p>
+        <button class="btn-ai-upload" (click)="requestAIAnalysis()">
+          Analyse this video
+        </button>
       </div>
 
-      <div *ngIf="activeTab === 'defences'" class="placeholder-box">
-        <p>Related defences for <strong>{{ technique?.category }}</strong> will appear here.</p>
+      <!-- PROCESSING -->
+      <div *ngIf="technique?.analysis_status === 'processing'">
+        <p>AI is analysing your video...</p>
+        <p class="muted">This can take a moment. You can leave this page.</p>
+      </div>
+
+      <!-- FAILED -->
+      <div *ngIf="technique?.analysis_status === 'failed'">
+        <p>Analysis failed.</p>
+        <p class="muted">{{ technique?.analysis?.error }}</p>
+        <button class="btn-ai-upload-small" (click)="requestAIAnalysis()">Try again</button>
+      </div>
+
+      <div class="ai-container" *ngIf="technique?.analysis_status === 'analysed' && technique?.analysis">
+
+        <div class="analysis-timeline">
+          <div class="timeline-header">
+            <h4>Position Flow</h4>
+          </div>
+          <div class="top-summary" *ngIf="technique.analysis.sortedDistribution">
+            <div *ngFor="let item of technique.analysis.sortedDistribution"
+                class="position-pill"
+                [style.background-color]="getPositionColor(item.key)">
+              <strong>{{ formatPosition(item.key) }}</strong> — {{ item.value }}%
+            </div>
+          </div>
+          <div class="timeline-bar">
+            <div *ngFor="let seg of technique.analysis.timeline" 
+                class="timeline-segment"
+                [style.width.%]="seg.durationPercentage"
+                [style.background-color]="seg.color"
+                [title]="seg.label">
+            </div>
+          </div>
+        </div>
+
+        <div class="video-preview">
+          <div class="video-wrapper" *ngIf="technique?.video_blob_url">
+            <video 
+              *ngIf="videoUrl"
+              [src]="videoUrl"
+              controls 
+              class="main-video"
+              [poster]="thumbnailUrl || 'assets/images/video-placeholder.jpg'">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div class="video-placeholder" *ngIf="!technique?.video_blob_url">
+            <p>No video available for this technique.</p>
+          </div>
+        </div>
+
+        <div class="feedback-list">
+          <h4>AI Instructor Notes</h4>
+          <div class="feedback-card" *ngFor="let feedback of technique.analysis.feedback">
+            <div class="feedback-marker" [ngClass]="feedback.type"></div>
+            <div class="feedback-content">
+              <p>{{ feedback }}</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>

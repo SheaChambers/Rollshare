@@ -5,11 +5,12 @@
 .no-reviews {
   padding: 40px 20px;
   text-align: center;
-  color: #777;
+  color: #1f5fbf;
   background: #fdfdfd;
   border-radius: 12px;
-  border: 1px dashed #ccc;
+  border: 1px dashed black;
   font-style: italic;
+  font-weight: 600;
 }
 
 .reviews-grid {

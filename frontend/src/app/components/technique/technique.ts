@@ -18,10 +18,13 @@ export class Technique implements OnInit {
   reviews: any[] = [];
   reviewForm: any;
   showReviews = false;
-  activeTab: string = 'reviews';
+  activeMainTab: string = 'details';
+  activeContentTab: string = 'reviews';
   videoUrl?: SafeResourceUrl;
   thumbnailUrl?: string;
   isLoading: boolean = true;
+  backendError: string | null = null;
+  pollHandle: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -52,6 +55,11 @@ export class Technique implements OnInit {
           res.video_blob_url
         );
       }
+
+      if (res.analysis) {
+        this.processAnalysisTimeline(res.analysis);
+      }
+
       this.thumbnailUrl = res.thumbnail_blob_url || null;
       this.isLoading = false;
     });
@@ -59,6 +67,75 @@ export class Technique implements OnInit {
     this.webService.getReviews(id).subscribe(res => {
       this.reviews = res;
     });
+  }
+
+  /**
+   * Converts position key into readable label
+   */
+  formatPosition(key: string | number): string {
+    return String(key).replace(/_/g, ' ');
+  }
+
+  /**
+   * Sort distribution with highest percentage first
+   */
+  sortByPercentageDesc = (a: any, b: any): number => {
+    return b.value - a.value;
+  }
+
+  /**
+   * Prepares the AI segments for the CSS-driven timeline bar
+   */
+  processAnalysisTimeline(results: any) {
+
+    if (!results || !Array.isArray(results.timeline)) {
+      console.warn("Timeline missing or invalid:", results);
+      return;
+    }
+
+    const segments = results.timeline;
+
+    if (segments.length === 0) return;
+
+    const first = segments[0];
+    const last = segments[segments.length - 1];
+
+    const totalDuration = last.end_s - first.start_s;
+
+    results.timeline = segments.map((seg: any) => ({
+      ...seg,
+      durationPercentage:
+        ((seg.end_s - seg.start_s) / totalDuration) * 100,
+      label: seg.position,
+      color: this.getPositionColor(seg.position)
+    }));
+
+    if (results.distribution) {
+      results.sortedDistribution = Object.entries(results.distribution)
+        .map(([key, value]) => ({ key, value }))
+        .sort((a: any, b: any) => b.value - a.value);
+    }
+  }
+
+  /**
+   * Defines consistent colors for different BJJ positions
+   */
+  getPositionColor(label: string): string {
+    const colors: { [key: string]: string } = {
+      '5050_guard': '#007dd0',
+      'open_guard': '#00b18e',
+      'closed_guard': '#00a846',
+      'half_guard': '#f1c40f',
+
+      'mount': '#e74c3c',
+      'side_control': '#e67e22',
+      'back': '#9b59b6',
+      
+      'standing': '#00578a',
+      'takedown': '#00886d',
+      'turtle': '#007f88'
+    };
+    return colors[label] || '#95a5a6';
   }
 
   toggleReviews() {
@@ -101,7 +178,7 @@ export class Technique implements OnInit {
   }
 
   saveToLibrary() {
-    if (!this.auth.isLoggedIn) {
+    if (!this.auth.isLoggedIn()) {
       alert("Please log in to save techniques!");
       return;
     }
@@ -124,8 +201,34 @@ export class Technique implements OnInit {
     });
   }
 
-  uploadForAI() {
-    // Placeholder for AI video analysis upload
-    console.log('Redirecting to AI upload service...');
+  requestAIAnalysis() {
+    if (!this.technique?._id) return;
+
+    this.webService.requestAIAnalysis(this.technique._id).subscribe({
+      next: () => {
+        this.technique.analysis_status = 'processing';
+        this.startPollingAnalysis();
+      },
+      error: (err) => this.backendError = err.error?.error || 'Could not start analysis'
+    });
+  }
+
+  startPollingAnalysis() {
+    if (this.pollHandle) clearInterval(this.pollHandle);
+
+    this.pollHandle = setInterval(() => {
+      this.webService.getTechnique(this.technique._id).subscribe(res => {
+        this.technique = res;
+
+        if (res.analysis_status !== 'processing') {
+          clearInterval(this.pollHandle);
+          this.pollHandle = null;
+
+          if (res.analysis_status === 'analysed' && res.analysis) {
+            this.processAnalysisTimeline(res.analysis);
+          }
+        }
+      });
+    }, 3000);
   }
 }
