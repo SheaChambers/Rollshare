@@ -28,7 +28,7 @@ export class MyTraining {
   filtersOpen = false;
 
   /** Current sorting method */
-  sortBy = "recent";
+  sortBy = "Most Recent";
 
   constructor(
     private http: HttpClient, 
@@ -110,18 +110,41 @@ export class MyTraining {
   private applyFrontendFilters() {
     let list = [...this.displayRolls];
 
-    // Sorting options
-    if (this.sortBy === "recent") {
-      list.sort((a, b) => {
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      });
-    } else if (this.sortBy === "name") {
-      list.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (this.sortBy === "popularity") {
-      list.sort((a, b) => (b.reviews?.length || 0) - (a.reviews?.length || 0));
-    } else if (this.sortBy === "difficulty") {
-      const order = ["Beginner", "Intermediate", "Advanced"];
-      list.sort((a, b) => order.indexOf(a.difficulty) - order.indexOf(b.difficulty));
+    switch (this.sortBy) {
+      case "Most Recent":
+        list.sort((a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+        break;
+
+      case "A-Z":
+        list.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+
+      case "Highest Rated":
+        list.sort((a, b) => {
+          const getAvg = (item: any) => {
+            if (!item.reviews || item.reviews.length === 0) return 0;
+            
+            const totalStars = item.reviews.reduce((sum: number, r: any) => {
+              return sum + Number(r.stars || r.rating || 0); 
+            }, 0);
+            
+            return totalStars / item.reviews.length;
+          };
+
+          const scoreA = getAvg(a);
+          const scoreB = getAvg(b);
+          
+          return scoreB - scoreA;
+        });
+        break;
+
+      case "Most Reviewed":
+        list.sort((a, b) =>
+          (b.reviews?.length ?? 0) - (a.reviews?.length ?? 0)
+        );
+        break;
     }
 
     this.filteredRolls = list;
@@ -137,7 +160,7 @@ export class MyTraining {
 
   /** Resets all user-applied filters and search text */
   resetFilters() {
-    this.sortBy = "name";
+    this.sortBy = "Most Recent";
     this.applyFilters();
   }
 }

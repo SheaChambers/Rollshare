@@ -121,9 +121,13 @@ export class AuthComponent implements OnInit {
       this.webService.registerUser(formData).subscribe({
         next: () => {
             this.isLoginMode = true;
+            this.authForm.reset();
             this.updateValidators();
         },
-        error: (err) => this.backendError = err.error?.error || "Registration failed"
+        error: (err) => {
+          console.error("Registration Error:", err);
+          this.backendError = err.error?.error || "Registration failed";
+        }
       });
     }
   }

@@ -14,30 +14,32 @@
     </div>
 
     <div *ngIf="isMyRollsMode">
-
-        <div class="filter-bar">
-            <button class="filter-btn" (click)="toggleFilters()">Active Filter: Last 7 Days</button>
-        </div>
-
-        <div class="filters-panel" *ngIf="filtersOpen">
-
-            <h3 class="filter-title">Filters</h3>
-
-            <!-- Sorting -->
-            <label>Sort By</label>
-            <select class="filter-select" [(ngModel)]="sortBy">
-                <option value="recent">Most Recent</option>
-                <option value="name">A-Z</option>
-                <option value="rating">Highest Rated</option>
-                <option value="popularity">Most Reviewed</option>
-            </select>
-
-            <!-- Buttons -->
-            <div class="filter-buttons">
-                <button class="btn-reset" (click)="resetFilters()">Reset</button>
-                <button class="btn-apply" (click)="applyFilters()">Apply</button>
+        
+        <div class="filter-container-wrapper">
+            <div class="filter-bar">
+                <button class="filter-btn" (click)="toggleFilters()">Active Filter: {{ sortBy }}</button>
             </div>
 
+            <div class="filters-panel" *ngIf="filtersOpen">
+
+                <h3 class="filter-title">Filters</h3>
+
+                <!-- Sorting -->
+                <label>Sort By</label>
+                <select class="filter-select" [(ngModel)]="sortBy">
+                    <option value="Most Recent">Most Recent</option>
+                    <option value="A-Z">A-Z</option>
+                    <option value="Highest Rated">Highest Rated</option>
+                    <option value="Most Reviewed">Most Reviewed</option>
+                </select>
+
+                <!-- Buttons -->
+                <div class="filter-buttons">
+                    <button class="btn-reset" (click)="resetFilters()">Reset</button>
+                    <button class="btn-apply" (click)="applyFilters()">Apply</button>
+                </div>
+
+            </div>
         </div>
 
         <div class="technique-grid">

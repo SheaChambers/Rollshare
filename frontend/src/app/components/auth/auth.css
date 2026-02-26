@@ -106,9 +106,20 @@
   cursor: default;
 }
 
+.backend-error {
+  color: #fff;
+  background-color: #c60125;
+  padding: 10px;
+  width: 60%;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto 15px auto;
+  font-weight: 600;
+}
+
 .error {
-  color: #b00020;
-  margin-bottom: 15px;
+  color: #c60125;
+  margin: 2px 0px 15px 0px;
 }
 
 .info {
