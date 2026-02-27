@@ -4,7 +4,7 @@ from app.controllers.user_controller import (
     update_user_profile, reset_password, remove_user,
     save_technique, get_saved_techniques_controller, unsave_technique,
     get_user_rolls, get_settings, update_settings,
-    enable_2fa, verify_2fa_setup, disable_2fa
+    enable_2fa, verify_2fa_setup, disable_2fa, upload_avatar
 )
 from app.decorators.auth_decorators import jwt_required, admin_required
 
@@ -89,3 +89,8 @@ def verify_2fa_route(current_user, is_admin):
 @jwt_required
 def disable_2fa_route(current_user, is_admin):
     return disable_2fa(current_user)
+
+@users_bp.route("/api/v1.0/users/me/avatar", methods=["POST"])
+@jwt_required
+def upload_avatar_route(current_user, is_admin):
+    return upload_avatar(current_user, request)

@@ -558,4 +558,12 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     );
   }
+
+  uploadAvatar(formData: FormData) {
+    return this.http.post<any>(
+      this.baseUrl + 'users/me/avatar',
+      formData,
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

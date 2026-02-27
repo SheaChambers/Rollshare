@@ -111,6 +111,11 @@ def get_me(requester: str):
     if not u:
         return jsonify({"error": "User not found"}), 404
     u["_id"] = str(u["_id"])
+
+    if u.get("avatar_url"):
+        storage = BlobStorageService()
+        u["avatar_url"] = storage.generate_read_url(u["avatar_url"])
+        
     return jsonify(u), 200
 
 
@@ -368,3 +373,44 @@ def disable_2fa(requester):
     })
 
     return jsonify({"message": "2FA disabled"}), 200
+
+
+def upload_avatar(requester: str, request):
+    user = find_by_username(requester)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    if "avatar" not in request.files:
+        return jsonify({"error": "Avatar image is required"}), 400
+
+    avatar = request.files["avatar"]
+
+    if not avatar or avatar.filename.strip() == "":
+        return jsonify({"error": "No image selected"}), 400
+
+    if not (avatar.content_type or "").startswith("image/"):
+        return jsonify({"error": "Invalid file type. Must be an image"}), 400
+
+    try:
+        storage = BlobStorageService()
+
+        ext = os.path.splitext(avatar.filename)[1].lower()
+        blob_name = f"avatars/{requester}_{ObjectId()}{ext}"
+
+        storage.upload_file(
+            avatar.stream,
+            blob_name,
+            avatar.content_type
+        )
+
+        update_user(user["_id"], {"avatar_url": blob_name})
+
+        avatar_url = storage.generate_read_url(blob_name)
+
+        return jsonify({
+            "message": "Avatar updated successfully",
+            "avatar_url": avatar_url
+        }), 200
+
+    except Exception:
+        return jsonify({"error": "Failed to upload avatar"}), 500

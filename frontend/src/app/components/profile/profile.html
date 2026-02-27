@@ -6,7 +6,10 @@
     </header>
 
     <div class="user-info-card">
-      <div class="avatar-circle"></div>
+      <div class="avatar-circle">
+        <img *ngIf="userData?.avatar_url" [src]="userData.avatar_url" class="avatar-img">
+        <span *ngIf="!userData?.avatar_url" class="avatar-placeholder">{{ userData?.username?.charAt(0) }}</span>
+      </div>
       <div class="user-details">
         <h2>{{ userData?.username }}</h2>
         <p>{{ userData?.belt_rank }} | Joined {{ userData?.created_at | date: 'yyyy' }}</p>
@@ -37,8 +40,12 @@
     <div class="edit-avatar-section">
       <div class="avatar-circle">
         <img *ngIf="userData?.avatar_url" [src]="userData.avatar_url" class="avatar-img">
+        <span *ngIf="!userData?.avatar_url" class="avatar-placeholder">
+          {{ userData?.username?.charAt(0) }}
+        </span>
       </div>
-      <button type="button" class="text-link">Change Avatar</button>
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+      <button type="button" class="text-link" (click)="fileInput.click()">Change Avatar</button>
     </div>
 
     <form [formGroup]="profileForm" (ngSubmit)="saveChanges()" class="edit-form">

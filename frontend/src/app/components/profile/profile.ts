@@ -114,6 +114,23 @@ export class ProfileComponent implements OnInit {
     return control && control.invalid && control.touched;
   }
 
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    this.webService.uploadAvatar(formData).subscribe({
+      next: (res: any) => {
+        this.userData.avatar_url = res.avatar_url;
+      },
+      error: (err) => {
+        this.backendError = "Failed to upload image";
+      }
+    });
+  }
+
   saveChanges() {
     if (this.profileForm.valid) {
       this.webService.updateUser(this.userData._id, this.profileForm.value).subscribe({
