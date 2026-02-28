@@ -45,10 +45,10 @@
       </div>
 
       <section class="content-tabs">
-        <h2 class="section-subtitle">Related Content & Reviews</h2>
+        <h2 class="section-subtitle">Related Content & Comments</h2>
         
         <div class="content-tab-nav">
-          <button [class.active]="activeContentTab === 'reviews'" (click)="activeContentTab = 'reviews'">User Reviews ({{ reviews.length }})</button>
+          <button [class.active]="activeContentTab === 'reviews'" (click)="activeContentTab = 'reviews'">Comments ({{ reviews.length }})</button>
           <button [class.active]="activeContentTab === 'attacks'" (click)="activeContentTab = 'attacks'">Related Attacks</button>
           <button [class.active]="activeContentTab === 'defences'" (click)="activeContentTab = 'defences'">Related Defences</button>
         </div>

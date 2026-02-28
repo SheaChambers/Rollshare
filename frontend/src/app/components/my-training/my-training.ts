@@ -62,28 +62,42 @@ export class MyTraining {
   loadData() {
     if (this.isMyRollsMode) {
       this.webService.getMyRolls().subscribe({
-        next: (data) => {
-          this.displayRolls = data.techniques || (Array.isArray(data) ? data : []);
+        next: (rollsData) => {
+          const rolls = rollsData.techniques || (Array.isArray(rollsData) ? rollsData : []);
 
-          console.log("Final displayData:", this.displayRolls);
-          this.applyFrontendFilters();
-          console.log("Filtered: ", this.filteredRolls);
+          this.webService.getSavedTechniques().subscribe({
+            next: (savedData: any) => {
+              const savedList = savedData.techniques || (Array.isArray(savedData) ? savedData : []);
+              const savedIds = savedList.map((s: any) => s._id);
+
+              this.displayRolls = rolls.map((r: any) => ({
+                ...r,
+                isSaved: savedIds.includes(r._id)
+              }));
+
+              this.applyFrontendFilters();
+            },
+            error: (err) => console.error("Error fetching saved list", err)
+          });
         },
         error: (err) => {
-          console.error("API Error:", err);
           this.backendError = "Could not load your rolls";
+          console.error("API Error:", err);
         }
       });
     } else {
       this.webService.getSavedTechniques().subscribe({
         next: (data) => {
-          this.displayTechniques = data.techniques || (Array.isArray(data) ? data : []);
+          const savedList = data.techniques || (Array.isArray(data) ? data : []);
 
-          console.log("Final DisplayData: ", this.displayTechniques);
+          this.displayTechniques = savedList.map((t: any) => ({
+            ...t,
+            isSaved: true
+          }));
         },
         error: (err) => {
-          console.error("API Error:", err);
           this.backendError = "Could not load your saved techniques";
+          console.error("API Error:", err);
         }
       })
     }

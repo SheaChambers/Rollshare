@@ -41,14 +41,6 @@ export class ReviewList {
   constructor(public auth: AuthService) {}
 
   /**
-   * Converts a numeric rating into an array for star display.
-   * @param rating The numeric rating value
-   */
-  toStars(rating: Number) {
-    return Array(Number(rating)).fill(0);
-  }
-
-  /**
    * Opens the edit modal and loads selected review into editing buffer.
    */
   startEdit(review: any) {

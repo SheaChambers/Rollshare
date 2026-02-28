@@ -9,13 +9,13 @@
 
             <div class="review-header">
                 <div class="review-user">
-                    <img src="assets/icons/user-icon.jpg" class="user-icon">
+                    <div class="avatar-circle">
+                        <img *ngIf="r.avatar_url" [src]="r.avatar_url" class="avatar-img">
+                        <span *ngIf="!r.avatar_url" class="avatar-placeholder">
+                            {{ r.user?.charAt(0) }}
+                        </span>
+                    </div>
                     <strong>{{ r.user }}</strong>
-                </div>
-
-                <div class="rating-stars">
-                    <img class="star-icon" src="assets/images/star.png"
-                        *ngFor="let s of toStars(r.rating)">
                 </div>
             </div>
 
@@ -39,12 +39,7 @@
 <div class="modal-backdrop" *ngIf="showEditModal">
     <div class="modal-box edit-modal">
 
-        <h2>Edit Review</h2>
-
-        <label>Rating</label>
-        <select [(ngModel)]="editingReview.rating">
-            <option *ngFor="let r of [1,2,3,4,5]" [value]="r">{{ r }}</option>
-        </select>
+        <h2>Edit Comment</h2>
 
         <label>Comment</label>
         <textarea [(ngModel)]="editingReview.comment"></textarea>
@@ -61,7 +56,7 @@
 <div class="modal-backdrop" *ngIf="deleteTarget">
     <div class="modal-box delete-box">
 
-        <h2>Delete Review?</h2>
+        <h2>Delete Comment?</h2>
         <p>This action cannot be undone.</p>
 
         <div class="modal-buttons">

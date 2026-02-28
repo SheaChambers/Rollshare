@@ -8,6 +8,7 @@ import { EditTechnique } from './components/edit-technique/edit-technique';
 import { authGuard } from './guards/auth-guard-guard';
 import { ProfileComponent } from './components/profile/profile';
 import { MyTraining } from './components/my-training/my-training';
+import { Community } from './components/community/community';
 
 export const routes: Routes = [
     {
@@ -45,5 +46,9 @@ export const routes: Routes = [
         path: 'training',
         component: MyTraining,
         canActivate: [authGuard]
+    },
+    {
+        path: 'community',
+        component: Community
     }
 ];

@@ -1,15 +1,7 @@
 <div class="review-form card">
-    <h3>Leave a Review</h3>
+    <h3>Leave a Comment</h3>
 
     <form [formGroup]="reviewForm" (ngSubmit)="submit()">
-
-        <label for="rating">Rating</label>
-        <select class="form-control" id="rating" formControlName="rating">
-            <option value="">Select Rating</option>
-            <option *ngFor="let r of [1,2,3,4,5]" [value]="r">
-                {{ r }}
-            </option>
-        </select>
 
         <label for="comment">Comment</label>
         <textarea class="form-control" id="comment"
@@ -28,7 +20,7 @@
         </button>
 
         <div class="login-note" *ngIf="!auth.isLoggedIn()">
-            Log in to leave a review.
+            Log in to comment.
         </div>
 
     </form>

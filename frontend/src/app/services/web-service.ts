@@ -566,4 +566,12 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  toggleLike(id : string) {
+    return this.http.post<any>(
+      this.baseUrl + 'techniques/' + id + '/like',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

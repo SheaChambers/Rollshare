@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { WebService } from '../../services/web-service';
+import { AuthService } from '../../services/auth-service';
 import { FormsModule } from '@angular/forms';
 import { TechniqueCard } from '../shared/technique-card/technique-card';
 
@@ -66,7 +67,8 @@ export class CategoryTechniques {
   constructor(
     private route: ActivatedRoute,
     private webService: WebService,
-    private router: Router
+    private router: Router,
+    public auth: AuthService
   ) {}
 
   /**
@@ -123,6 +125,7 @@ export class CategoryTechniques {
    * Applies client-side sorting and tag filtering afterwards.
    */
   fetchTechniques() {
+    this.isLoading = true;
     let filters: any = {
       q: this.searchTerm.trim(),
       difficulty: this.selectedDifficulties
@@ -131,7 +134,7 @@ export class CategoryTechniques {
     this.webService
       .getTechniquesByCategory(this.category, this.page, this.pageSize, filters)
       .subscribe((response: any) => {
-        this.techniques = response.techniques || [];
+        const categoryTech = response.techniques || [];
 
         const pag = response.pagination;
         if (pag) {
@@ -141,8 +144,31 @@ export class CategoryTechniques {
           this.totalPages = pag.total_pages;
         }
 
-        this.applyFrontendFilters();
-        this.isLoading = false;
+        if (this.auth.isLoggedIn()) {
+          this.webService.getSavedTechniques().subscribe({
+            next: (savedData: any) => {
+              const savedList = savedData.techniques || (Array.isArray(savedData) ? savedData : []);
+              const savedIds = savedList.map((s: any) => s._id);
+
+              this.techniques = categoryTech.map((t: any) => ({
+                ...t,
+                isSaved: savedIds.includes(t._id)
+              }));
+
+              this.applyFrontendFilters();
+              this.isLoading = false;
+            },
+            error: () => {
+              this.techniques = categoryTech;
+              this.applyFrontendFilters();
+              this.isLoading = false;
+            }
+          });
+        } else {
+          this.techniques = categoryTech;
+          this.applyFrontendFilters();
+          this.isLoading = false;
+        }
       });
   }
 

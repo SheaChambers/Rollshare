@@ -47,8 +47,7 @@ export class ReviewForm {
    */
   ngOnInit() {
     this.reviewForm = this.formBuilder.group({
-      rating: ['', Validators.required],
-      comment: ['', [Validators.required, Validators.minLength(5)]],
+      comment: ['', [Validators.required, Validators.minLength(5)]]
     });
   }
 

@@ -52,6 +52,7 @@ def create(request, current_user: str):
         "created_at": datetime.datetime.now(datetime.UTC),
         "analysis_status": "not_requested",
         "analysis": None,
+        "likes": [],
         "reviews": []
     }
 
@@ -189,6 +190,22 @@ def update(technique_id: str, current_user: str, is_admin: bool, request):
         return jsonify({"error": "No changes made"}), 400
 
     return jsonify({"message": "Technique updated"}), 200
+
+
+def toggle_like(technique_id: str, current_user: str):
+    if not ObjectId.is_valid(technique_id):
+        return jsonify({"error": "Invalid technique ID"}), 400
+    
+    t = find_one_by_id(technique_id)
+    if not t:
+        return jsonify({"error": "Technique not found"}), 404
+    
+    if current_user in t.get("likes", []):
+        update_by_id(technique_id, {"$pull": {"likes": current_user}})
+        return jsonify({"liked": False}), 200
+    else:
+        update_by_id(technique_id, {"$addToSet": {"likes": current_user}})
+        return jsonify({"liked": True}), 200
 
 
 def remove(technique_id: str, current_user: str, is_admin: bool):

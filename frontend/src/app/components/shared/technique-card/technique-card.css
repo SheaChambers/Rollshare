@@ -44,3 +44,23 @@
     font-weight: bold;
     border-radius: 6px;
 }
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.action-btn:hover {
+    transform: scale(1.05);
+}
