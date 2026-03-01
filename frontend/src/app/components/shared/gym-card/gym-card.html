@@ -1,0 +1,57 @@
+<div class="gyms-container">
+
+  <div class="gym-grid">
+    <div class="gym-card" *ngIf="gym">
+
+      <!-- IMAGE THUMBNAIL -->
+      <div class="thumb-wrapper" (click)="viewGym()">
+        <img class="gym-thumbnail"
+             [src]="getGymThumbnail()"
+             alt="Gym Photo">
+        <span class="verified-badge" *ngIf="gym.verified">Verified</span>
+      </div>
+
+      <!-- TITLE + LOCATION -->
+      <div class="gym-header">
+        <h3>{{ gym.name }}</h3>
+        <p class="gym-location" *ngIf="gym.city">
+            {{ gym.city }}
+        </p>
+      </div>
+
+      <!-- RATING -->
+      <div class="rating-row" *ngIf="gym.reviews?.length">
+        <img src="assets/images/star.png" class="star-icon" *ngFor="let s of getStars()">
+        <span class="rating-count">({{ gym.reviews.length }})</span>
+      </div>
+
+      <!-- CONTACT -->
+      <div class="gym-info">
+        <div class="info-row" *ngIf="gym.contact.phone">
+          <strong>Phone:</strong> {{ gym.contact.phone }}
+        </div>
+        <div class="info-row" *ngIf="gym.contact.email">
+          <strong>Email:</strong> {{ gym.contact.email }}
+        </div>
+        <div class="info-row" *ngIf="gym.contact.website">
+          <strong>Website: </strong>
+          <a [href]="gym.contact.website" target="_blank">Visit</a>
+        </div>
+      </div>
+
+      <!-- SOCIAL LINKS -->
+      <div class="social-row">
+        <a *ngIf="gym.media_url?.instagram" [href]="gym.media_url.instagram" target="_blank">
+          <img src="assets/icons/instagram.png">
+        </a>
+        <a *ngIf="gym.media_url?.facebook" [href]="gym.media_url.facebook" target="_blank">
+          <img src="assets/icons/facebook.png">
+        </a>
+      </div>
+
+      <button class="btn-view" (click)="viewGym()">View Gym</button>
+
+    </div>
+  </div>
+
+</div>

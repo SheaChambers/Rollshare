@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { WebService } from '../../services/web-service';
 import { AuthService } from '../../services/auth-service';
 import { TechniqueCard } from '../shared/technique-card/technique-card';
+import { GymCard } from '../shared/gym-card/gym-card';
 
 @Component({
   selector: 'app-community',
   standalone: true,
-  imports: [CommonModule, TechniqueCard],
+  imports: [CommonModule, TechniqueCard, GymCard],
   templateUrl: './community.html',
   styleUrl: './community.css'
 })
@@ -16,6 +18,7 @@ export class Community {
   activeTab: 'feed' | 'friends' | 'clubs' = 'feed';
   
   communityPosts: any[] = [];
+  communityClubs: any[] = [];
 
   currentPage: number = 1;
   pageSize: number = 9;
@@ -24,6 +27,7 @@ export class Community {
   isLoading: boolean = true;
 
   constructor(
+    private router: Router,
     private webService: WebService,
     public auth: AuthService
   ) {}
@@ -65,6 +69,22 @@ export class Community {
     });
   }
 
+  loadClubs() {
+    this.isLoading = true;
+    let filters: any = {};
+
+    this.webService.getGyms(this.currentPage, this.pageSize, filters).subscribe({
+      next: (response) => {
+        this.communityClubs = response.gyms || [];
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.errorMessage = "Could not load gyms.";
+        this.isLoading = false;
+      }
+    });
+  }
+
   /**
    * Logic for switching tabs
    */
@@ -73,6 +93,12 @@ export class Community {
     if (tab === 'feed') {
       this.loadDiscoveryFeed();
     }
-    // Logic for 'friends' or 'clubs' would go here later
+    if (tab === 'clubs') {
+      this.loadClubs();
+    }
+  }
+
+  goToAddGym() {
+    this.router.navigate(['/gyms/new']);
   }
 }

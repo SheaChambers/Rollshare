@@ -18,4 +18,23 @@
             </app-technique-card>
         </div>
     </div>
+
+    <div *ngIf="activeTab === 'clubs'" class="clubs-list">
+
+        <button class="btn-add-gym" *ngIf="auth.isLoggedIn()"
+                (click)="goToAddGym()">
+            + Register a Gym
+        </button>
+
+        <div class="clubs-grid">
+            <app-gym-card
+                *ngFor="let club of communityClubs"
+                [gym]="club">
+            </app-gym-card>
+        </div>
+
+        <div class="empty-state" *ngIf="communityClubs.length === 0 && !isLoading">
+            <p>No gyms found in your area yet.</p>
+        </div>
+    </div>
 </div>
