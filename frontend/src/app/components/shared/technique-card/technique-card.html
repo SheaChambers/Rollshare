@@ -14,11 +14,13 @@
     <div class="card-actions">
 
         <button class="action-btn" (click)="toggleLike($event)">
-            {{ technique.likes?.legnth || 0 }} Likes
+            {{ technique.likes?.length || 0 }}
+            {{ technique.likes?.length === 1 ? 'Like' : 'Likes'}}
         </button>
 
         <button class="action-btn" (click)="viewTechnique()">
-            {{ technique.reviews?.length || 0 }} Comments
+            {{ technique.reviews?.length || 0 }}
+            {{ technique.reviews?.length === 1 ? 'Comment' : 'Comments'}}
         </button>
 
         <button class="action-btn" (click)="toggleSave($event)">

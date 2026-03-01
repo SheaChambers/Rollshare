@@ -1,0 +1,21 @@
+<div class="community-container">
+    <header class="page-header">
+        <h1 class="page-title">Community</h1>
+    </header>
+
+    <div class="community-tabs">
+        <button (click)="activeTab = 'feed'" [class.active]="activeTab === 'feed'">Activity Feed</button>
+        <button (click)="activeTab = 'friends'" [class.active]="activeTab === 'friends'">Friends</button>
+        <button (click)="activeTab = 'clubs'" [class.active]="activeTab === 'clubs'">Clubs</button>
+    </div>
+
+    <div *ngIf="activeTab === 'feed'" class="feed-list">
+        <div class="technique-grid">
+            <app-technique-card 
+                *ngFor="let post of communityPosts"
+                [technique]="post"
+                [buttonText]="'View AI Anlysis & Video'">
+            </app-technique-card>
+        </div>
+    </div>
+</div>

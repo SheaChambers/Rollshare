@@ -49,6 +49,18 @@ def pull_review(technique_id: str, review_id: str):
         {"$pull": {"reviews": {"_id": ObjectId(review_id)}}}
     )
 
+def add_like_to_technique(technique_id: str, username: str):
+    return techniques_col().update_one(
+        {"_id": ObjectId(technique_id)},
+        {"$addToSet": {"likes": username}}
+    )
+
+def remove_like_from_technique(technique_id: str, username: str):
+    return techniques_col().update_one(
+        {"_id": ObjectId(technique_id)},
+        {"$pull": {"likes": username}}
+    )
+
 def update_analysis_results(technique_id: str, status: str, results: dict = None):
     return techniques_col().update_one(
         {"_id": ObjectId(technique_id)},

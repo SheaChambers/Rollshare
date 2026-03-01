@@ -22,6 +22,11 @@ def get_technique(technique_id):
 def update_technique(technique_id, current_user, is_admin):
     return c.update(technique_id, current_user, is_admin, request)
 
+@techniques_bp.route("/api/v1.0/techniques/<string:technique_id>/like", methods=["POST"])
+@jwt_required
+def like_technique(technique_id, current_user, is_admin):
+    return c.toggle_like(technique_id, current_user)
+
 @techniques_bp.route("/api/v1.0/techniques/<string:technique_id>", methods=["DELETE"])
 @jwt_required
 def delete_technique(technique_id, current_user, is_admin):

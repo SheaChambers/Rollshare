@@ -122,7 +122,8 @@ export class MyTraining {
    * and updates the final filtered list of techniques.
    */
   private applyFrontendFilters() {
-    let list = [...this.displayRolls];
+    let sourceList = this.isMyRollsMode ? this.displayRolls : this.displayTechniques;
+    let list = [...sourceList];
 
     switch (this.sortBy) {
       case "Most Recent":
@@ -135,23 +136,10 @@ export class MyTraining {
         list.sort((a, b) => a.name.localeCompare(b.name));
         break;
 
-      case "Highest Rated":
-        list.sort((a, b) => {
-          const getAvg = (item: any) => {
-            if (!item.reviews || item.reviews.length === 0) return 0;
-            
-            const totalStars = item.reviews.reduce((sum: number, r: any) => {
-              return sum + Number(r.stars || r.rating || 0); 
-            }, 0);
-            
-            return totalStars / item.reviews.length;
-          };
-
-          const scoreA = getAvg(a);
-          const scoreB = getAvg(b);
-          
-          return scoreB - scoreA;
-        });
+      case "Most Liked":
+        list.sort((a, b) =>
+          (b.likes?.length ?? 0) - (a.likes?.length ?? 0)
+        );
         break;
 
       case "Most Reviewed":
@@ -161,7 +149,11 @@ export class MyTraining {
         break;
     }
 
-    this.filteredRolls = list;
+    if (this.isMyRollsMode) {
+      this.filteredRolls = list;
+    } else {
+      this.displayTechniques = list;
+    }
   }
 
   /**

@@ -6,7 +6,8 @@ import threading
 
 from app.services.blob_storage_service import BlobStorageService
 from app.models.techniques_model import (
-    insert_technique, count, find_many, find_one_by_id, update_by_id, delete_by_id
+    insert_technique, count, find_many, find_one_by_id, update_by_id, delete_by_id,
+    add_like_to_technique, remove_like_from_technique
 )
 from app.controllers.video_analyser_controller import analyse_video_task
 
@@ -201,10 +202,10 @@ def toggle_like(technique_id: str, current_user: str):
         return jsonify({"error": "Technique not found"}), 404
     
     if current_user in t.get("likes", []):
-        update_by_id(technique_id, {"$pull": {"likes": current_user}})
+        remove_like_from_technique(technique_id, current_user)
         return jsonify({"liked": False}), 200
     else:
-        update_by_id(technique_id, {"$addToSet": {"likes": current_user}})
+        add_like_to_technique(technique_id, current_user)
         return jsonify({"liked": True}), 200
 
 
