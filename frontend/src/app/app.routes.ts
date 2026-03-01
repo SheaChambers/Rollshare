@@ -9,6 +9,7 @@ import { authGuard } from './guards/auth-guard-guard';
 import { ProfileComponent } from './components/profile/profile';
 import { MyTraining } from './components/my-training/my-training';
 import { Community } from './components/community/community';
+import { NewGym } from './components/new-gym/new-gym';
 
 export const routes: Routes = [
     {
@@ -50,5 +51,10 @@ export const routes: Routes = [
     {
         path: 'community',
         component: Community
+    },
+    {
+        path: 'gyms/new',
+        component: NewGym,
+        canActivate: [authGuard]
     }
 ];
