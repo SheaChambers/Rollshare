@@ -10,6 +10,7 @@ import { ProfileComponent } from './components/profile/profile';
 import { MyTraining } from './components/my-training/my-training';
 import { Community } from './components/community/community';
 import { NewGym } from './components/new-gym/new-gym';
+import { Gym } from './components/gym/gym';
 
 export const routes: Routes = [
     {
@@ -56,5 +57,9 @@ export const routes: Routes = [
         path: 'gyms/new',
         component: NewGym,
         canActivate: [authGuard]
+    },
+    {
+        path: 'gyms/:id',
+        component: Gym
     }
 ];

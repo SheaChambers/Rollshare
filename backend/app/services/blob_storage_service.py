@@ -89,3 +89,17 @@ class BlobStorageService:
         os.remove(thumbnail_path)
 
         return thumbnail_blob
+    
+    def delete_blob(self, blob_name: str):
+        try: 
+            clean_name = blob_name.split('?')[0]
+
+            if "blob.core.windows.net" in clean_name:
+                clean_name = clean_name.split(f"{self.container_name}/")[-1]
+
+            blob_client = self.container.get_blob_client(clean_name)
+            blob_client.delete_blob()
+            return True
+        except Exception as e:
+            print(f"Azure Delete Error: {e}")
+            return False

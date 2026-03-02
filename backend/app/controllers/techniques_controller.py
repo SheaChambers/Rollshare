@@ -219,6 +219,12 @@ def remove(technique_id: str, current_user: str, is_admin: bool):
 
     if not is_admin and t.get("created_by") != current_user:
         return jsonify({"error": "Not authorised"}), 403
+    
+    storage = BlobStorageService()
+    if t.get("video_blob_url"):
+        storage.delete_blob(t["video_blob_url"])
+    if t.get("thumbnail_blob_url"):
+        storage.delete_blob(t["thumbnail_blob_url"])
 
     res = delete_by_id(technique_id)
     if res.deleted_count == 0:

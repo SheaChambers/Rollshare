@@ -122,20 +122,20 @@ export class Technique implements OnInit {
    */
   getPositionColor(label: string): string {
     const colors: { [key: string]: string } = {
-      '5050_guard': '#007dd0',
-      'open_guard': '#00b18e',
-      'closed_guard': '#00a846',
-      'half_guard': '#f1c40f',
+      '5050_guard': '#49b5fe',
+      'open_guard': '#5bffde',
+      'closed_guard': '#2cfa82',
+      'half_guard': '#fedb4f',
 
-      'mount': '#e74c3c',
-      'side_control': '#e67e22',
-      'back': '#9b59b6',
+      'mount': '#fc4b37',
+      'side_control': '#fc8931',
+      'back': '#c942fe',
       
-      'standing': '#00578a',
-      'takedown': '#00886d',
-      'turtle': '#007f88'
+      'standing': '#ff87dd',
+      'takedown': '#b6fe42',
+      'turtle': '#066dfd'
     };
-    return colors[label] || '#95a5a6';
+    return colors[label] || '#f99cc9';
   }
 
   toggleReviews() {

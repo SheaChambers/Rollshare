@@ -33,9 +33,10 @@ export class GymCard {
   getGymThumbnail(): string {
     if (this.gym?.photos?.length > 0) {
       const first = this.gym.photos[0];
-      return first.startsWith("http")
-        ? first
-        : "http://localhost:5001/static/" + first;
+
+      if (typeof first === 'string' && first.startsWith("http")) {
+        return first;
+      }
     }
     return this.fallbackThumb;
   }

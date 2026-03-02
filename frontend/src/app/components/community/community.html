@@ -4,9 +4,9 @@
     </header>
 
     <div class="community-tabs">
-        <button (click)="activeTab = 'feed'" [class.active]="activeTab === 'feed'">Activity Feed</button>
-        <button (click)="activeTab = 'friends'" [class.active]="activeTab === 'friends'">Friends</button>
-        <button (click)="activeTab = 'clubs'" [class.active]="activeTab === 'clubs'">Clubs</button>
+        <button (click)="switchTab('feed')" [class.active]="activeTab === 'feed'">Activity Feed</button>
+        <button (click)="switchTab('friends')" [class.active]="activeTab === 'friends'">Friends</button>
+        <button (click)="switchTab('clubs')" [class.active]="activeTab === 'clubs'">Clubs</button>
     </div>
 
     <div *ngIf="activeTab === 'feed'" class="feed-list">
@@ -26,7 +26,69 @@
             + Register a Gym
         </button>
 
-        <div class="clubs-grid">
+        <div class="top-controls">
+
+            <!-- Search -->
+            <input 
+            type="text"
+            class="search-input"
+            placeholder="Search for a Gym"
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()">
+
+            <!-- Filters button -->
+            <button class="btn-filters" (click)="toggleFilters()">Filters</button>
+
+            <div class="filters-panel" *ngIf="filtersOpen">
+
+                <h3 class="filter-title">Filters</h3>
+
+                <!-- MULTI-SELECT CITIES -->
+                <label>Cities</label>
+                <div class="multi-select-box">
+                    <label *ngFor="let city of cityList" class="multi-option">
+                        <input type="checkbox"
+                            [value]="city"
+                            [checked]="selectedCities.includes(city)"
+                            (change)="toggleCitySelection($event)">
+                        {{ city }}
+                    </label>
+                </div>
+
+                <!-- TAG FILTERS -->
+                <label>Gym Tags</label>
+                <div class="multi-select-box">
+                    <label class="multi-option">
+                        <input type="checkbox" value="verified" [checked]="selectedTags.includes('verified')" (change)="toggleTag($event)">
+                        Verified
+                    </label>
+                    <label class="multi-option">
+                        <input type="checkbox" value="popular" [checked]="selectedTags.includes('popular')" (change)="toggleTag($event)">
+                        Popular (5+ reviews)
+                    </label>
+                    <label class="multi-option">
+                        <input type="checkbox" value="multiCoach" [checked]="selectedTags.includes('multiCoach')" (change)="toggleTag($event)">
+                        Multiple Coaches
+                    </label>
+                </div>
+
+                <!-- SORT -->
+                <label>Sort By</label>
+                    <select class="filter-select" [(ngModel)]="sortBy">
+                    <option value="name">A-Z</option>
+                    <option value="rating">Highest Rating</option>
+                    <option value="popularity">Most Reviewed</option>
+                </select>
+
+                <div class="filter-buttons">
+                    <button class="btn-reset" (click)="resetFilters()">Reset</button>
+                    <button class="btn-apply" (click)="applyFilters()">Apply</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="gyms-grid">
             <app-gym-card
                 *ngFor="let club of communityClubs"
                 [gym]="club">

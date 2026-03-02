@@ -337,7 +337,7 @@ export class WebService {
     return this.http.delete<any>(
       this.baseUrl + 'gyms/' + id + '/photos',
       { 
-        body: { photo }, 
+        body: { photo: photo }, 
         headers: this.auth.getAuthHeaders()
       }
     );

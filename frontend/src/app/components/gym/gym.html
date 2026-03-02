@@ -1,0 +1,176 @@
+<div class="gym-container" *ngIf="gym">
+
+    <!-- HERO SECTION -->
+    <div class="gym-hero">
+        <div class="hero-overlay">
+            <h1>{{ gym?.name }}</h1>
+
+            <button class="btn-edit"
+                *ngIf="auth.isLoggedIn() && (auth.isAdmin() || gym?.created_by === auth.getUsername())"
+                (click)="goToEditGym()">
+                Edit Gym
+            </button>
+        </div>
+    </div>
+
+
+    <!-- MAIN INFO + MAP -->
+    <div class="gym-grid">
+
+        <!-- LEFT COLUMN -->
+        <div class="left-column">
+
+            <!-- INFO CARD -->
+            <div class="card info-card">
+                <h3>Gym Information</h3>
+
+                <div class="info-row">
+                    <span class="label">Address:</span>
+                    <span>{{ gym?.address }}</span>
+                </div>
+
+                <div class="info-row" *ngIf="gym?.contact?.phone">
+                    <span class="label">Phone:</span>
+                    <span>{{ gym.contact.phone }}</span>
+                </div>
+
+                <div class="info-row" *ngIf="gym?.contact?.email">
+                    <span class="label">Email:</span>
+                    <span>{{ gym.contact.email }}</span>
+                </div>
+
+                <a *ngIf="gym?.contact?.website"
+                   class="view-web-btn"
+                   [href]="gym.contact.website"
+                   target="_blank">
+                   Visit Website
+                </a>
+
+                <div class="social-row">
+                    <a *ngIf="gym?.media_url?.instagram"
+                       [href]="gym.media_url.instagram"
+                       target="_blank">
+                        <img src="assets/icons/instagram.png">
+                    </a>
+
+                    <a *ngIf="gym?.media_url?.facebook"
+                       [href]="gym.media_url.facebook"
+                       target="_blank">
+                        <img src="assets/icons/facebook.png">
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- COACHES -->
+            <div class="card" *ngIf="gym?.coaches?.length">
+                <h3>Coaches</h3>
+
+                <ul class="coach-list">
+                    <li *ngFor="let coach of gym.coaches">
+                        {{ coach }}
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+
+        <!-- MAP -->
+        <div class="card map-card">
+            <h3>Location</h3>
+            <div id="gym-map" class="gym-map"></div>
+        </div>
+
+    </div>
+
+
+    <!-- PHOTO UPLOAD -->
+    <div class="card upload-card" *ngIf="authorised">
+        <h3>Upload Photos</h3>
+
+        <div class="upload-area">
+            <input type="file" multiple (change)="onFileChange($event)">
+        </div>
+
+        <button class="upload-btn"
+                (click)="savePhotos()"
+                [disabled]="!selectedFiles.length">
+            Upload
+        </button>
+    </div>
+
+
+    <!-- GALLERY -->
+    <div class="gallery-section">
+        <h2>Photo Gallery</h2>
+
+        <div class="gallery-grid" *ngIf="gym?.photos?.length">
+
+            <div class="photo-wrapper"
+                 *ngFor="let photo of gym.photos"
+                 (click)="openPhoto(formatPhotoUrl(photo))">
+
+                <img class="gallery-thumb"
+                     [src]="formatPhotoUrl(photo)"
+                     (error)="onPhotoError($event)">
+
+                <button class="delete-photo-btn"
+                        *ngIf="authorised"
+                        (click)="deletePhoto(photo); $event.stopPropagation()">
+                    ×
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="no-photos" *ngIf="!gym?.photos?.length">
+            No photos available for this gym.
+        </div>
+    </div>
+
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" *ngIf="lightboxActive" (click)="closePhoto()">
+
+        <button class="lightbox-arrow left"
+                (click)="previousPhoto(); $event.stopPropagation()">
+            ‹
+        </button>
+
+        <img class="lightbox-image" [src]="selectedPhoto">
+
+        <button class="lightbox-arrow right"
+                (click)="nextPhoto(); $event.stopPropagation()">
+            ›
+        </button>
+
+    </div>
+
+
+    <!-- REVIEWS -->
+    <div class="card reviews-section">
+        <div class="reviews-header" (click)="toggleReviews()">
+            <h2>Reviews ({{ reviews.length }})</h2>
+            <span [class.rotate]="showReviews">⌄</span>
+        </div>
+
+        <div *ngIf="showReviews">
+
+            <app-review-list
+                [reviews]="reviews"
+                (onEdit)="onEditReview($event)"
+                (onDelete)="onDeleteReview($event)">
+            </app-review-list>
+
+            <app-review-form
+                parentType="gym"
+                [parentId]="gym._id"
+                (reviewAdded)="refreshReviews()">
+            </app-review-form>
+
+        </div>
+    </div>
+
+</div>

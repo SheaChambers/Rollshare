@@ -74,19 +74,23 @@ def list_all(request):
             {"coaches": {"$regex": q, "$options": "i"}},
         ]
 
-    sort_field = request.args.get("sort_by", "name")
-    sort_order = request.args.get("order", "asc").lower()
-    sort_dir = 1 if sort_order == "asc" else -1
+    sort_field = "_id"
+    sort_order = 1
 
     total = count(filters)
     total_pages = (total + ps - 1) // ps
     skip = (pn - 1) * ps
 
-    cursor = find_many(filters, sort_field, sort_dir, skip, ps)
+    cursor = find_many(filters, sort_field, sort_order, skip, ps)
+    storage = BlobStorageService()
 
     gyms = []
     for g in cursor:
         g["_id"] = str(g["_id"])
+
+        if g.get("photos"):
+            g["photos"][0] = storage.generate_read_url(g["photos"][0])
+
         for r in g.get("reviews", []):
             if "_id" in r:
                 r["_id"] = str(r["_id"])
@@ -113,6 +117,14 @@ def get_one(gym_id: str):
     g = find_one_by_id(gym_id)
     if not g:
         return jsonify({"error": "Gym not found"}), 404
+    
+    storage = BlobStorageService()
+
+    if "photos" in g and isinstance(g["photos"], list):
+        signed_photos = []
+        for photo_path in g["photos"]:
+            signed_photos.append(storage.generate_read_url(photo_path))
+        g["photos"] = signed_photos
 
     g["_id"] = str(g["_id"])
     for r in g.get("reviews", []):
@@ -220,6 +232,7 @@ def upload_photos(gym_id: str, current_user: str, is_admin: bool, request):
 
     storage = BlobStorageService()
     urls = []
+    signed_urls = []
 
     for f in files:
         if not f or not f.filename:
@@ -229,14 +242,19 @@ def upload_photos(gym_id: str, current_user: str, is_admin: bool, request):
 
         ext = f.filename.rsplit(".", 1)[1].lower() if "." in f.filename else "jpg"
         blob_name = f"gyms/{gym_id}/{uuid.uuid4()}.{ext}"
-        url = storage.upload_file(f.stream, blob_name, f.mimetype)
-        urls.append(url)
+        storage.upload_file(f.stream, blob_name, f.mimetype)
+        urls.append(blob_name)
+
+        signed_urls.append(storage.generate_read_url(blob_name))
 
     if not urls:
         return jsonify({"error": "No valid files uploaded"}), 400
 
     push_photos(gym_id, urls)
-    return jsonify({"message": "Photos uploaded", "photos": urls}), 200
+    return jsonify({
+        "message": "Photos uploaded", 
+        "photos": signed_urls
+    }), 200
 
 
 def delete_photo(gym_id: str, current_user: str, is_admin: bool, request):
@@ -251,9 +269,13 @@ def delete_photo(gym_id: str, current_user: str, is_admin: bool, request):
         return jsonify({"error": "Not authorised"}), 403
 
     data = request.get_json(silent=True) or {}
-    photo_url = data.get("photo_url")
-    if not photo_url:
-        return jsonify({"error": "photo_url is required"}), 400
+    photo = data.get("photo")
+    if not photo:
+        return jsonify({"error": "photo is required"}), 400
 
-    pull_photo(gym_id, photo_url)
+    pull_photo(gym_id, photo)
+
+    storage = BlobStorageService()
+    storage.delete_blob(photo)
+
     return jsonify({"message": "Photo removed from gym"}), 200
