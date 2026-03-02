@@ -1,0 +1,109 @@
+<div class="home-container">
+
+  <!-- HEADER -->
+  <header class="home-header">
+    <div class="logo">RollShare</div>
+
+    <div class="user-greeting" *ngIf="auth.isLoggedIn()">
+      Ready to train, <strong>{{ auth.getUsername() }}</strong>?
+    </div>
+  </header>
+
+
+  <!-- SEARCH -->
+  <section class="search-section" [formGroup]="searchForm">
+    <div class="search-bar-wrapper">
+      <input
+        type="text"
+        placeholder="Search techniques, positions, submissions..."
+        class="main-search"
+        formControlName="query"
+      />
+    </div>
+
+    <div class="category-pills">
+      <span class="pill" (click)="executeSearch('Guard')">#Guard</span>
+      <span class="pill" (click)="executeSearch('Leg Lock')">#LegLocks</span>
+      <span class="pill" (click)="executeSearch('Escape')">#Escapes</span>
+    </div>
+  </section>
+
+
+  <!-- GRID -->
+  <div class="bento-grid">
+
+    <!-- FEATURED -->
+    <div class="card hero-card" *ngIf="featuredTechnique">
+      <button class="badge" (click)="goToTechnique(featuredTechnique._id)">Technique of the Day</button>
+
+      <img
+        [src]="featuredTechnique.thumbnail_blob_url"
+        class="hero-thumb"
+      />
+
+      <div class="card-content">
+        <h2>{{ featuredTechnique.name }}</h2>
+        <p class="meta">By {{ featuredTechnique.created_by }}</p>
+
+        <div class="card-actions">
+            <button class="action-btn" (click)="toggleLike($event)">
+                {{ featuredTechnique.likes?.length || 0 }}
+                {{ featuredTechnique.likes?.length === 1 ? 'Like' : 'Likes'}}
+            </button>
+
+            <button class="action-btn" [class.active]="featuredTechnique?.isSaved" (click)="toggleSave($event)">
+                {{ featuredTechnique.isSaved ? 'Saved' : 'Save'}}
+            </button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- LIBRARY -->
+    <div class="card library-card">
+      <h3>Your Library</h3>
+
+      <div *ngIf="savedTechniques.length; else emptyLib">
+        <div class="saved-item" *ngFor="let item of savedTechniques.slice(0,4)">
+          <img [src]="item.thumbnail_blob_url" />
+          <span>{{ item.name }}</span>
+        </div>
+
+        <button class="view-all" (click)="goToSavedTechniques()">View All</button>
+      </div>
+
+      <ng-template #emptyLib>
+        <p class="muted">No saved techniques yet.</p>
+      </ng-template>
+    </div>
+
+
+    <!-- NEARBY GYMS -->
+    <div class="card gym-card">
+      <h3>Nearby Mats</h3>
+
+      <div *ngFor="let gym of nearbyGyms.slice(0,3)" class="gym-mini">
+        <strong>{{ gym.name }}</strong>
+        <span>{{ gym.address }}</span>
+      </div>
+
+      <button class="btn-primary" (click)="goToGyms()">Find Gyms</button>
+    </div>
+
+
+    <!-- STATS -->
+    <div class="card stats-card">
+      <div class="stat">
+        <span class="number">{{ savedTechniques.length }}</span>
+        <span class="label">Saved</span>
+      </div>
+
+      <div class="stat">
+        <span class="number">{{ featuredTechnique?.likes?.length || 0 }}</span>
+        <span class="label">Likes Today</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>
