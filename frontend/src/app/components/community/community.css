@@ -35,6 +35,7 @@
   background: none;
   cursor: pointer;
   font-size: 1.2rem;
+  color: #000;
 }
 
 .community-tabs button.active {
@@ -51,7 +52,7 @@
 
 .btn-add-gym {
   display: flex;
-  width: 70%;
+  width: 90%;
   padding: 12px;
   background-color: #1f5fbf;
   color: white;
@@ -67,7 +68,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  width: 70%;
+  width: 90%;
   margin: 10px auto;
   gap: 12px;
 }
@@ -85,6 +86,7 @@
   border-radius: 25px;
   border: 1px solid #bbb;
   background: white;
+  color: #000;
   cursor: pointer;
   font-weight: 600;
 }

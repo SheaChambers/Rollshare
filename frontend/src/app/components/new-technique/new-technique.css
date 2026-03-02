@@ -30,6 +30,7 @@
   border-radius: 8px;
   font-size: 1rem;
   background: #fafafa;
+  color: #000;
 }
 
 select.form-control {
@@ -100,6 +101,7 @@ select.form-control {
 .btn-cancel {
   flex: 1;
   background: #f0f0f0;
+  color: #000;
   border: 1px solid #ddd;
   border-radius: 10px;
   cursor: pointer;
