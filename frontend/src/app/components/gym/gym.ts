@@ -96,14 +96,6 @@ export class Gym {
         this.authorised = this.auth.isAdmin() ||
                           response.created_by === this.auth.getUsername();
 
-        const lat = this.gym.geo_location.coordinates[1];
-        const lng = this.gym.geo_location.coordinates[0];
-
-        // Lookup readable address
-        this.getAddressFromCoords(lat, lng).then(addr => {
-          this.gym.address = addr || "Address not available";
-        });
-
         // Delay map load until DOM is ready
         setTimeout(() => this.loadMap(), 200);
     });
@@ -141,19 +133,6 @@ export class Gym {
     }).addTo(map);
 
     L.marker([lat, lng]).addTo(map);
-  }
-
-  /**
-   * Uses OpenStreetMap (Nominatim) reverse geocoding API to turn
-   * GPS coordinates into a human-readable address.
-   */
-  getAddressFromCoords(lat: number, lng: number) {
-    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
-
-    return fetch(url)
-      .then(res => res.json())
-      .then(data => data.display_name)
-      .catch(() => null);
   }
 
   /**

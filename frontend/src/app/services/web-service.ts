@@ -254,6 +254,7 @@ export class WebService {
     let formData = new FormData();
 
     formData.append("name", gym.name);
+    formData.append("address", gym.address);
     formData.append("latitude", gym.latitude);
     formData.append("longitude", gym.longitude);
     formData.append("phone", gym.phone);

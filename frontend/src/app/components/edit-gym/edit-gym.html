@@ -1,0 +1,106 @@
+<div class="edit-gym-container">
+
+  <div class="form-header">
+    <div>
+      <h1 class="page-title">Edit Gym</h1>
+      <p class="subtitle">Update details for this gym.</p>
+    </div>
+
+    <button class="btn-delete" type="button" (click)="openDeleteConfirm()">
+      Delete
+    </button>
+  </div>
+
+  <div *ngIf="!authorised" class="alert alert-danger">
+    You are not authorised to edit this gym.
+  </div>
+
+  <form class="gym-form" *ngIf="authorised" [formGroup]="editForm" (ngSubmit)="updateGym()">
+
+    <!-- NAME -->
+    <div class="form-group">
+      <label>Gym Name</label>
+      <input class="form-input" type="text" formControlName="name">
+      <div class="error" *ngIf="isInvalid('name')">
+        Name must be between 3 and 80 characters.
+      </div>
+    </div>
+
+    <!-- ADDRESS -->
+    <div class="form-group">
+      <label>Address</label>
+      <input class="form-input" type="text" formControlName="address"
+             placeholder="e.g. 123 Belfast Road, Belfast">
+      <div class="error" *ngIf="isInvalid('address')">
+        Please enter a valid address.
+      </div>
+    </div>
+
+    <!-- PHONE -->
+    <div class="form-group">
+      <label>Phone</label>
+      <input class="form-input" type="text" formControlName="phone">
+      <div class="error" *ngIf="isInvalid('phone')">
+        Phone number is required.
+      </div>
+    </div>
+
+    <!-- EMAIL -->
+    <div class="form-group">
+      <label>Email</label>
+      <input class="form-input" type="email" formControlName="email">
+      <div class="error" *ngIf="isInvalid('email')">
+        A valid email is required.
+      </div>
+    </div>
+
+    <!-- WEBSITE -->
+    <div class="form-group">
+      <label>Website</label>
+      <input class="form-input" type="url" formControlName="website">
+    </div>
+
+    <!-- SOCIALS -->
+    <div class="form-group">
+      <label>Instagram URL</label>
+      <input class="form-input" type="url" formControlName="instagram">
+    </div>
+
+    <div class="form-group">
+      <label>Facebook URL</label>
+      <input class="form-input" type="url" formControlName="facebook">
+    </div>
+
+    <div class="form-group">
+      <label>Coaches</label>
+      <input class="form-input" type="text" formControlName="coaches" placeholder="John Doe">
+    </div>
+
+    <!-- BACKEND ERRORS -->
+    <div class="alert alert-danger" *ngIf="backendError">
+      {{ backendError }}
+    </div>
+
+    <div class="button-row">
+      <button class="btn-cancel" type="button" (click)="cancel()">
+        Cancel
+      </button>
+
+      <button class="btn-submit" type="submit" [disabled]="editForm.invalid">
+        Save Changes
+      </button>
+    </div>
+  </form>
+</div>
+
+<div class="modal-backdrop" *ngIf="confirmDelete">
+  <div class="modal-box">
+    <h2>Delete Gym?</h2>
+    <p>This action cannot be undone.</p>
+
+    <div class="modal-buttons">
+      <button class="btn-cancel-modal" (click)="confirmDelete = false">Cancel</button>
+      <button class="btn-delete-confirm" (click)="deleteGym()">Delete</button>
+    </div>
+  </div>
+</div>

@@ -119,6 +119,7 @@ export class NewGym {
       .then(coords => {
         let data = {
           name: formValue.name,
+          address: formValue.address,
           latitude: coords.lat.toString(),
           longitude: coords.lon.toString(),
           phone: formValue.phone,

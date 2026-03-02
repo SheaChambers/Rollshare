@@ -28,6 +28,7 @@ def create(request, current_user: str):
 
     doc = {
         "name": request.form["name"].strip(),
+        "address": request.form["address"].strip(),
         "geo_location": {"type": "Point", "coordinates": [lon, lat]},
         "contact": {
             "phone": request.form["phone"].strip(),
@@ -151,6 +152,9 @@ def update(gym_id: str, current_user: str, is_admin: bool, request):
         if not v:
             return jsonify({"error": "name cannot be empty"}), 400
         fields["name"] = v
+
+    if "address" in request.form:
+        fields["address"] = request.form["address"].strip()
 
     if "phone" in request.form:
         fields["contact.phone"] = request.form["phone"].strip()

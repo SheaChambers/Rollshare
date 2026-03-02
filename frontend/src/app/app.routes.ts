@@ -11,6 +11,7 @@ import { MyTraining } from './components/my-training/my-training';
 import { Community } from './components/community/community';
 import { NewGym } from './components/new-gym/new-gym';
 import { Gym } from './components/gym/gym';
+import { EditGym } from './components/edit-gym/edit-gym';
 
 export const routes: Routes = [
     {
@@ -61,5 +62,10 @@ export const routes: Routes = [
     {
         path: 'gyms/:id',
         component: Gym
+    },
+    {
+        path: 'gyms/:id/edit',
+        component: EditGym,
+        canActivate: [authGuard]
     }
 ];
