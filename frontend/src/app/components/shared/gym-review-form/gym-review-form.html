@@ -1,0 +1,35 @@
+<div class="review-form card">
+    <h3>Leave a Comment</h3>
+
+    <form [formGroup]="reviewForm" (ngSubmit)="submit()">
+
+        <label>Rating</label>
+        <select class="form-control" formControlName="rating">
+            <option value="">Select Rating</option>
+            <option *ngFor="let r of [1,2,3,4,5]" [value]="r">
+                {{ r }}
+            </option>
+        </select>
+        
+        <label for="comment">Comment</label>
+        <textarea class="form-control" id="comment"
+                formControlName="comment"
+                rows="4"
+                placeholder="Share your thoughts...">
+        </textarea>
+
+        <div class="alert alert-danger" *ngIf="backendError">
+            {{ backendError }}
+        </div>
+
+        <button class="btn-submit" type="submit"
+                [disabled]="reviewForm.invalid || !auth.isLoggedIn()">
+            Submit
+        </button>
+
+        <div class="login-note" *ngIf="!auth.isLoggedIn()">
+            Log in to comment.
+        </div>
+
+    </form>
+</div>

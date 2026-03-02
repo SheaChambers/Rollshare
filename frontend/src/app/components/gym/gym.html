@@ -158,17 +158,17 @@
 
         <div *ngIf="showReviews">
 
-            <app-review-list
+            <app-gym-review-list
                 [reviews]="reviews"
                 (onEdit)="onEditReview($event)"
                 (onDelete)="onDeleteReview($event)">
-            </app-review-list>
+            </app-gym-review-list>
 
-            <app-review-form
+            <app-gym-review-form
                 parentType="gym"
                 [parentId]="gym._id"
                 (reviewAdded)="refreshReviews()">
-            </app-review-form>
+            </app-gym-review-form>
 
         </div>
     </div>

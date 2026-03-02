@@ -6,6 +6,8 @@ from app.models.gyms_model import (
     find_one_by_id, push_review, get_reviews_only, find_review_projection,
     update_review, pull_review
 )
+from app.models.user_model import users_col
+from app.services.blob_storage_service import BlobStorageService
 
 def add(gym_id: str, current_user: str, request):
     if not ObjectId.is_valid(gym_id):
@@ -54,8 +56,19 @@ def list_all(gym_id: str):
         return jsonify({"error": "Gym not found"}), 404
 
     reviews = doc.get("reviews", [])
+
+    storage = BlobStorageService()
+
     for r in reviews:
         r["_id"] = str(r["_id"])
+
+        user_doc = users_col().find_one({"username": r["user"]}, {"avatar_url": 1})
+
+        if user_doc and user_doc.get("avatar_url"):
+            r["avatar_url"] = storage.generate_read_url(user_doc["avatar_url"])
+        else:
+            r["avatar_url"] = None
+
     return jsonify(reviews), 200
 
 

@@ -1,0 +1,51 @@
+.review-form {
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 14px;
+  margin-top: 25px;
+  border: 1px solid #eee;
+}
+
+.review-form h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.review-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form-control {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 18px;
+  font-size: 1rem;
+  background: #fff;
+  display: block;
+  resize: vertical;
+}
+
+.form-control:focus {
+  outline: 2px solid #1f5fbf;
+}
+
+.btn-submit {
+  background: #1f5fbf;
+  color: white;
+  padding: 14px;
+  border-radius: 10px;
+  width: 100%;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+}

@@ -5,8 +5,8 @@ import { AuthService } from '../../services/auth-service';
 import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
-import { ReviewList } from '../shared/review-list/review-list';
-import { ReviewForm } from '../shared/review-form/review-form';
+import { GymReviewList } from '../shared/gym-review-list/gym-review-list';
+import { GymReviewForm } from '../shared/gym-review-form/gym-review-form';
 
 const markerIcon = L.icon({
   iconUrl: 'assets/leaflet/marker-icon.png',
@@ -27,7 +27,7 @@ L.Marker.prototype.options.icon = markerIcon;
  */
 @Component({
   selector: 'app-gym',
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, ReviewList, ReviewForm],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, GymReviewList, GymReviewForm],
   templateUrl: './gym.html',
   styleUrl: './gym.css',
 })

@@ -43,7 +43,10 @@ def get_reviews_only(gym_id: str):
 def find_review_projection(gym_id: str, review_id: str):
     return gyms_col().find_one(
         {"_id": ObjectId(gym_id), "reviews._id": ObjectId(review_id)},
-        {"reviews.$": 1}
+        {
+            "reviews.$": 1,
+            "reviews.user": 1
+        }
     )
 
 def update_review(gym_id: str, review_id: str, update_fields: dict):
