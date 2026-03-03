@@ -47,12 +47,13 @@ export class Home {
   loadHomepageData() {
     this.isLoading = true;
 
-    this.webService.getTechniques(1, 1).subscribe({
-      next: (data) => {
-        this.featuredTechnique = data.techniques[0];
-        if (this.auth.isLoggedIn() && this.featuredTechnique) {
-          this.checkIfSaved(this.featuredTechnique._id);
-        }
+    this.webService.getFeaturedTechnique().subscribe({
+      next: (data: any) => {
+        this.featuredTechnique = data;
+        this.checkIfSaved(this.featuredTechnique._id);
+        this.isLoading = false;
+      },
+      error: () => {
         this.isLoading = false;
       }
     });

@@ -68,3 +68,6 @@ def update_analysis_results(technique_id: str, status: str, results: dict = None
                   "analysis": results}
         }
     )
+
+def get_featured():
+    return techniques_col().find_one({"featured": True})

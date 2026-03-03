@@ -32,6 +32,12 @@ def jwt_required(func):
 
         # password reset invalidation
         user = db.users.find_one({"username": data["user"]})
+        if not user:
+            return make_response(jsonify({"message": "User not found"}), 401)
+        
+        if user.get("banned"):
+            return make_response(jsonify({"error": "Account is banned"}), 403)
+        
         if user:
             pwd_updated = user.get("password_updated_at")
             issued_at = data.get("iat")

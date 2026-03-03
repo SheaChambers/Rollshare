@@ -7,7 +7,7 @@ import threading
 from app.services.blob_storage_service import BlobStorageService
 from app.models.techniques_model import (
     insert_technique, count, find_many, find_one_by_id, update_by_id, delete_by_id,
-    add_like_to_technique, remove_like_from_technique
+    add_like_to_technique, remove_like_from_technique, get_featured
 )
 from app.controllers.video_analyser_controller import analyse_video_task
 
@@ -51,6 +51,7 @@ def create(request, current_user: str):
         "thumbnail_blob_url": thumbnail_blob,
         "created_by": current_user,
         "created_at": datetime.datetime.now(datetime.UTC),
+        "featured": False,
         "analysis_status": "not_requested",
         "analysis": None,
         "likes": [],
@@ -230,3 +231,19 @@ def remove(technique_id: str, current_user: str, is_admin: bool):
     if res.deleted_count == 0:
         return jsonify({"error": "Deletion failed"}), 500
     return jsonify({}), 204
+
+
+def get_featured_technique():
+    tech = get_featured()
+
+    if not tech:
+        return jsonify({"error": "No featured technique"}), 404
+
+    tech["_id"] = str(tech["_id"])
+
+    if "reviews" in tech:
+        for r in tech["reviews"]:
+            if "_id" in r:
+                r["_id"] = str(r["_id"])
+
+    return jsonify(tech), 200

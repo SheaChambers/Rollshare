@@ -41,6 +41,7 @@ def register(request):
         "belt_rank": request.form["belt_rank"].strip(),
         "bio": request.form.get("bio", "").strip(),
         "admin": False,
+        "banned": False,
         "saved_techniques": [],
         "created_at": datetime.datetime.now(datetime.UTC),
 

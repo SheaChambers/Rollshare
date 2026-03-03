@@ -575,4 +575,55 @@ export class WebService {
       { headers: this.auth.getAuthHeaders() }
     )
   }
+
+  getAdminOverview() {
+    return this.http.get<any>(
+      this.baseUrl + 'admin/overview',
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  getAdminUsers() {
+    return this.http.get<any>(
+      this.baseUrl + 'admin/users',
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  getTopTechniques() {
+    return this.http.get<any>(
+      this.baseUrl + 'admin/top-techniques',
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  getFeaturedTechnique() {
+    return this.http.get<any>(
+      this.baseUrl + 'techniques/featured'
+    );
+  }
+
+  addFeaturedTechnique(techniqueId: string) {
+    return this.http.put<any>(
+      this.baseUrl + 'admin/techniques/' + techniqueId + 'feature',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  banUser(id: string) {
+    return this.http.put<any>(
+      this.baseUrl + 'admin/users/' + id + '/ban',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
+  unbanUser(id: string) {
+    return this.http.put<any>(
+      this.baseUrl + 'admin/users/' + id + '/unban',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
 }

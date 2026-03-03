@@ -1,0 +1,121 @@
+<div class="admin-container" *ngIf="overview">
+
+  <h1 class="page-title">Admin Dashboard</h1>
+
+  <!-- ===================== -->
+  <!-- 1. PLATFORM OVERVIEW -->
+  <!-- ===================== -->
+  <section class="section">
+    <h2>Platform Overview</h2>
+
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <span class="number">{{ overview.total_users }}</span>
+        <span class="label">Users</span>
+        <span class="sub">+{{ overview.new_users_this_week }} this week</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="number">{{ overview.total_techniques }}</span>
+        <span class="label">Techniques</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="number">{{ overview.total_gyms }}</span>
+        <span class="label">Gyms</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="number">{{ overview.total_reviews }}</span>
+        <span class="label">Reviews</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="number">{{ overview.total_likes }}</span>
+        <span class="label">Likes</span>
+      </div>
+
+      <div class="stat-card">
+        <span class="number">{{ overview.total_saves }}</span>
+        <span class="label">Saves</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ===================== -->
+  <!-- 2. MODERATION TOOLS -->
+  <!-- ===================== -->
+  <section class="section">
+
+    <h2>Moderation</h2>
+
+    <div class="moderation-grid">
+
+      <div class="moderation-card">
+        <h3>Manage Users</h3>
+        <button (click)="goToUsers()">View Users</button>
+        <button class="danger">Ban User</button>
+      </div>
+
+      <div class="moderation-card">
+        <h3>Manage Techniques</h3>
+        <button (click)="goToTechniques()">View Techniques</button>
+        <button>Mark as Featured</button>
+        <button class="danger">Delete Technique</button>
+      </div>
+
+      <div class="moderation-card">
+        <h3>Manage Gyms</h3>
+        <button (click)="goToGyms()">View Gyms</button>
+        <button>Verify Gym</button>
+        <button class="danger">Delete Gym</button>
+      </div>
+
+      <div class="moderation-card">
+        <h3>Reviews</h3>
+        <button>View All Reviews</button>
+        <button class="danger">Delete Review</button>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ===================== -->
+  <!-- 3. LIGHT ANALYTICS -->
+  <!-- ===================== -->
+  <section class="section">
+
+    <h2>Analytics</h2>
+
+    <div class="analytics-grid">
+
+      <div class="analytics-card">
+        <h3>Top Techniques</h3>
+        <div class="leaderboard">
+          <div class="leader-item" *ngFor="let t of topTechniques">
+            <strong>{{ t.name }}</strong>
+            <span>❤️ {{ t.likes_count }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="analytics-card">
+        <h3>Most Active Users</h3>
+        <div class="leaderboard">
+          <div class="leader-item" *ngFor="let u of activeUsers">
+            <strong>{{ u.username }}</strong>
+            <span>{{ u.roll_count }} uploads</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+</div>

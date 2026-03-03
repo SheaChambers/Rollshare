@@ -31,3 +31,7 @@ def like_technique(technique_id, current_user, is_admin):
 @jwt_required
 def delete_technique(technique_id, current_user, is_admin):
     return c.remove(technique_id, current_user, is_admin)
+
+@techniques_bp.route("/api/v1.0/techniques/featured", methods=["GET"])
+def featured_route():
+    return c.get_featured_technique()

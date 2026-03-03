@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthComponent } from './components/auth/auth';
+import { Admin } from './components/admin/admin';
 import { Home } from './components/home/home';
 import { Techniques } from './components/techniques/techniques';
 import { CategoryTechniques } from './components/category-techniques/category-techniques';
@@ -18,6 +19,10 @@ export const routes: Routes = [
     {
         path: 'login',
         component: AuthComponent
+    },
+    {
+        path: 'admin',
+        component: Admin
     },
     {
         path: '',
