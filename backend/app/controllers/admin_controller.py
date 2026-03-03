@@ -1,7 +1,7 @@
 from flask import jsonify
 from bson import ObjectId
 from app.models.admin_model import (
-    count_users, count_techniques, count_gyms, count_reviews,
+    techniques_col, count_users, count_techniques, count_gyms, count_reviews,
     count_likes, count_saves, count_new_users_this_week, 
     top_techniques_by_likes, ban_user, unban_user, feature_technique
 )
@@ -67,3 +67,24 @@ def feature_technique_controller(technique_id: str):
         return jsonify({"error": "Technique not found"}), 404
 
     return jsonify({"message": "Technique marked as featured"}), 200
+
+
+def list_all_techniques():
+    techniques = techniques_col().find({})
+
+    results = []
+
+    for t in techniques:
+        results.append({
+            "_id": str(t["_id"]),
+            "name": t.get("name"),
+            "category": t.get("category"),
+            "difficulty": t.get("difficulty"),
+            "created_by": t.get("created_by"),
+            "created_at": t.get("created_at"),
+            "featured": t.get("featured", False),
+            "likes_count": len(t.get("likes", [])),
+            "review_count": len(t.get("reviews", []))
+        })
+
+    return results

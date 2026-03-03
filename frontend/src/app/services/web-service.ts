@@ -590,6 +590,13 @@ export class WebService {
     )
   }
 
+  getAllAdminTechniques() {
+    return this.http.get<any>(
+      this.baseUrl + 'admin/techniques',
+      { headers: this.auth.getAuthHeaders() }
+    )
+  }
+
   getTopTechniques() {
     return this.http.get<any>(
       this.baseUrl + 'admin/top-techniques',

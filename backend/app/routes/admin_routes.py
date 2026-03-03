@@ -1,7 +1,8 @@
 from flask import Blueprint
 from app.controllers.admin_controller import (
     get_admin_overview, get_top_techniques, ban_user_controller,
-    unban_user_controller, feature_technique_controller
+    unban_user_controller, feature_technique_controller,
+    list_all_techniques
 )
 from app.decorators.auth_decorators import jwt_required, admin_required
 
@@ -41,3 +42,10 @@ def unban_user_route(user_id, current_user, is_admin):
 @admin_required
 def feature_technique_route(technique_id, current_user, is_admin):
     return feature_technique_controller(technique_id)
+
+
+@admin_bp.route("/api/v1.0/admin/techniques", methods=["GET"])
+@jwt_required
+@admin_required
+def admin_techniques_route(current_user, is_admin):
+    return list_all_techniques()

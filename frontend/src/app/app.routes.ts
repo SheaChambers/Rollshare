@@ -14,8 +14,9 @@ import { Community } from './components/community/community';
 import { NewGym } from './components/new-gym/new-gym';
 import { Gym } from './components/gym/gym';
 import { EditGym } from './components/edit-gym/edit-gym';
-import { AdminUsers } from './components/admin-users/admin-users';
 import { adminGuard } from './guards/admin-guard-guard';
+import { AdminUsers } from './components/admin-users/admin-users';
+import { AdminTechniques } from './components/admin-techniques/admin-techniques';
 
 export const routes: Routes = [
     {
@@ -84,6 +85,11 @@ export const routes: Routes = [
     {
         path: 'users',
         component: AdminUsers,
+        canActivate: [adminGuard]
+    },
+    {
+        path: 'admin/techniques',
+        component: AdminTechniques,
         canActivate: [adminGuard]
     }
 ];

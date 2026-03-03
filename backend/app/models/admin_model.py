@@ -1,5 +1,6 @@
 from app.db import get_db
 import datetime
+from bson import ObjectId
 
 
 def users_col():
@@ -76,18 +77,18 @@ def top_techniques_by_likes():
 
 def ban_user(user_id):
     return users_col().update_one(
-        {"_id": user_id},
+        {"_id": ObjectId(user_id)},
         {"$set": {"banned": True}}
     )
 
 def unban_user(user_id):
     return users_col().update_one(
-        {"_id": user_id},
+        {"_id": ObjectId(user_id)},
         {"$set": {"banned": False}}
     )
 
 def feature_technique(technique_id):
-    techniques_col.update_many({}, {"$set": {"featured": False}})
+    techniques_col().update_many({}, {"$set": {"featured": False}})
 
     return techniques_col().update_one(
         {"_id": technique_id},
