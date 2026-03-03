@@ -6,10 +6,11 @@ import { WebService } from '../../services/web-service';
 import { AuthService } from '../../services/auth-service';
 import { ReviewList } from '../shared/review-list/review-list';
 import { ReviewForm } from '../shared/review-form/review-form';
+import { BackButton } from '../shared/back-button/back-button';
 
 @Component({
   selector: 'app-technique',
-  imports: [RouterModule, CommonModule, ReviewList, ReviewForm],
+  imports: [RouterModule, CommonModule, ReviewList, ReviewForm, BackButton],
   templateUrl: './technique.html',
   styleUrl: './technique.css',
 })

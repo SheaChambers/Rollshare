@@ -5,6 +5,7 @@ import { WebService } from '../../services/web-service';
 import { AuthService } from '../../services/auth-service';
 import { FormsModule } from '@angular/forms';
 import { TechniqueCard } from '../shared/technique-card/technique-card';
+import { BackButton } from '../shared/back-button/back-button';
 
 /**
  * The CategoryTechniques component displays a list of techniques
@@ -14,7 +15,7 @@ import { TechniqueCard } from '../shared/technique-card/technique-card';
  */
 @Component({
   selector: 'app-category-techniques',
-  imports: [CommonModule, FormsModule, TechniqueCard],
+  imports: [CommonModule, FormsModule, TechniqueCard, BackButton],
   templateUrl: './category-techniques.html',
   styleUrl: './category-techniques.css',
 })

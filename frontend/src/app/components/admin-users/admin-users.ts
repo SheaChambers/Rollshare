@@ -4,12 +4,13 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { WebService } from '../../services/web-service';
+import { BackButton } from '../shared/back-button/back-button';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-admin-users',
-  imports: [CommonModule, AgGridAngular],
+  imports: [CommonModule, AgGridAngular, BackButton],
   templateUrl: './admin-users.html',
   styleUrls: ['./admin-users.css']
 })

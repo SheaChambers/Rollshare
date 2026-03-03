@@ -5,12 +5,13 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { AllCommunityModule, ModuleRegistry } from 'ag-grid-community';
 import { WebService } from '../../services/web-service';
+import { BackButton } from '../shared/back-button/back-button';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
   selector: 'app-admin-gyms',
-  imports: [CommonModule, AgGridAngular],
+  imports: [CommonModule, AgGridAngular, BackButton],
   templateUrl: './admin-gyms.html',
   styleUrl: './admin-gyms.css',
 })
