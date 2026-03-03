@@ -208,7 +208,7 @@ def remove(gym_id: str, current_user: str, is_admin: bool):
     return jsonify({}), 204
 
 
-def verify(gym_id: str):
+def verify_gym(gym_id: str):
     if not ObjectId.is_valid(gym_id):
         return jsonify({"error": "Invalid gym ID"}), 400
 
@@ -217,6 +217,17 @@ def verify(gym_id: str):
         return jsonify({"error": "Gym not found"}), 404
 
     return jsonify({"message": "Gym verified"}), 200
+
+
+def unverify_gym(gym_id: str):
+    if not ObjectId.is_valid(gym_id):
+        return jsonify({"error": "Invalid gym ID"}), 400
+
+    res = update_by_id(gym_id, {"verified": False})
+    if res.matched_count == 0:
+        return jsonify({"error": "Gym not found"}), 404
+
+    return jsonify({"message": "Gym unverified"}), 200
 
 
 def upload_photos(gym_id: str, current_user: str, is_admin: bool, request):

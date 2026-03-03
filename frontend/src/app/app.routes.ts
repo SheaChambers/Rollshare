@@ -17,6 +17,7 @@ import { EditGym } from './components/edit-gym/edit-gym';
 import { adminGuard } from './guards/admin-guard-guard';
 import { AdminUsers } from './components/admin-users/admin-users';
 import { AdminTechniques } from './components/admin-techniques/admin-techniques';
+import { AdminGyms } from './components/admin-gyms/admin-gyms';
 
 export const routes: Routes = [
     {
@@ -90,6 +91,11 @@ export const routes: Routes = [
     {
         path: 'admin/techniques',
         component: AdminTechniques,
+        canActivate: [adminGuard]
+    },
+    {
+        path: 'admin/gyms',
+        component: AdminGyms,
         canActivate: [adminGuard]
     }
 ];

@@ -597,6 +597,29 @@ export class WebService {
     )
   }
 
+  getAllAdminGyms() {
+    return this.http.get<any>(
+      this.baseUrl + 'admin/gyms',
+      { headers: this.auth.getAuthHeaders() }
+    );
+  }
+
+  verifyGym(id: string) {
+    return this.http.put<any>(
+      this.baseUrl + 'admin/gyms/' + id + '/verify',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    );
+  }
+
+  unverifyGym(id: string) {
+    return this.http.put<any>(
+      this.baseUrl + 'admin/gyms/' + id + '/unverify',
+      {},
+      { headers: this.auth.getAuthHeaders() }
+    );
+  }
+
   getTopTechniques() {
     return this.http.get<any>(
       this.baseUrl + 'admin/top-techniques',

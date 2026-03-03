@@ -1,7 +1,7 @@
 from flask import jsonify
 from bson import ObjectId
 from app.models.admin_model import (
-    techniques_col, count_users, count_techniques, count_gyms, count_reviews,
+    techniques_col, gyms_col, count_users, count_techniques, count_gyms, count_reviews,
     count_likes, count_saves, count_new_users_this_week, 
     top_techniques_by_likes, ban_user, unban_user, feature_technique
 )
@@ -85,6 +85,25 @@ def list_all_techniques():
             "featured": t.get("featured", False),
             "likes_count": len(t.get("likes", [])),
             "review_count": len(t.get("reviews", []))
+        })
+
+    return results
+
+
+def list_all_gyms():
+    gyms = gyms_col().find({})
+
+    results = []
+
+    for g in gyms:
+        results.append({
+            "_id": str(g["_id"]),
+            "name": g.get("name"),
+            "address": g.get("address"),
+            "created_by": g.get("created_by"),
+            "verified": g.get("verified", False),
+            "created_at": g.get("created_at"),
+            "review_count": len(g.get("reviews", []))
         })
 
     return results

@@ -1,0 +1,42 @@
+.admin-gyms {
+    font-family: sans-serif;
+}
+
+h1 {
+    color: #1f5fbf;
+}
+
+:host ::ng-deep .ag-cell {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+:host ::ng-deep .ag-cell[col-id="Actions"] {
+    justify-content: center;
+}
+
+:host ::ng-deep .ag-header-cell-label {
+    display: flex;
+    align-items: center;
+}
+
+:host ::ng-deep .btn-danger {
+    background-color: #e60f0f;
+    color: white;
+    border: none;
+    padding: 2px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+:host ::ng-deep .btn-primary {
+    background-color: #1f5fbf;
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 800;
+}
