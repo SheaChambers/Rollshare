@@ -1,0 +1,22 @@
+<div class="banned-container">
+    <div class="banned-card">
+        <h1>Account Suspended</h1>
+        <p>
+            Your account has been suspended by an administrator.
+        </p>
+
+        <p *ngIf="bannedInfo?.banned_at">
+            Banned on: {{ bannedInfo.banned_at | date:'medium' }}
+        </p>
+
+        <p *ngIf="bannedInfo?.banned_by">
+            By: {{ bannedInfo.banned_by }}
+        </p>
+
+        <p>
+            Please Contact Support at sheachambers67@yaho.com
+        </p>
+
+        <button (click)="goToHome()">Return Home</button>
+    </div>
+</div>

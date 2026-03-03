@@ -14,6 +14,9 @@ def login(request):
         return jsonify({"error": "Username and password are required"}), 400
 
     user = find_by_username(username)
+    if user.get("banned", False):
+        return jsonify({"error": "Your account has been banned. Contact Support: sheachambers67@yahoo.com"}), 403
+
     if not user or not bcrypt.checkpw(password.encode("utf-8"), user["password"]):
         return jsonify({"error": "Invalid username or password"}), 400
 

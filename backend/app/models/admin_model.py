@@ -75,16 +75,30 @@ def top_techniques_by_likes():
 
     return list(techniques_col().aggregate(pipeline))
 
-def ban_user(user_id):
+def ban_user(user_id: str, admin_username: str):
     return users_col().update_one(
         {"_id": ObjectId(user_id)},
-        {"$set": {"banned": True}}
+        {
+            "$set": {
+                "banned": True,
+                "banned_at": datetime.datetime.now(datetime.UTC),
+                "banned_by": admin_username
+            }
+        }
     )
 
 def unban_user(user_id):
     return users_col().update_one(
         {"_id": ObjectId(user_id)},
-        {"$set": {"banned": False}}
+        {
+            "$set": {
+                "banned": False
+            },
+            "$unset": {
+                "banned_at": "",
+                "banned_by": ""
+            }
+        }
     )
 
 def feature_technique(technique_id):

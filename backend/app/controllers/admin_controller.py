@@ -30,12 +30,12 @@ def get_top_techniques():
     return jsonify(results), 200
 
 
-def ban_user_controller(user_id: str):
+def ban_user_controller(user_id: str, current_user: str):
 
     if not ObjectId.is_valid(user_id):
         return jsonify({"error": "Invalid user ID"}), 400
 
-    result = ban_user(ObjectId(user_id))
+    result = ban_user(ObjectId(user_id), current_user)
 
     if result.matched_count == 0:
         return jsonify({"error": "User not found"}), 404

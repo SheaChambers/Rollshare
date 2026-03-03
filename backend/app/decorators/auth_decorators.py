@@ -35,20 +35,23 @@ def jwt_required(func):
         if not user:
             return make_response(jsonify({"message": "User not found"}), 401)
         
-        if user.get("banned"):
-            return make_response(jsonify({"error": "Account is banned"}), 403)
+        if user.get("banned", False):
+            return make_response(jsonify({
+                "error": "Account is banned",
+                "banned_at": user.get("banned_at"),
+                "banned_by": user.get("banned_by")
+            }), 403)
         
-        if user:
-            pwd_updated = user.get("password_updated_at")
-            issued_at = data.get("iat")
+        pwd_updated = user.get("password_updated_at")
+        issued_at = data.get("iat")
 
-            if pwd_updated and issued_at:
-                issued_dt = datetime.datetime.fromtimestamp(issued_at, datetime.UTC)
-                pwd_updated = pwd_updated.replace(tzinfo=datetime.UTC)
-                if issued_dt < pwd_updated:
-                    return make_response(
-                        jsonify({"message": "Token no longer valid"}), 401
-                    )
+        if pwd_updated and issued_at:
+            issued_dt = datetime.datetime.fromtimestamp(issued_at, datetime.UTC)
+            pwd_updated = pwd_updated.replace(tzinfo=datetime.UTC)
+            if issued_dt < pwd_updated:
+                return make_response(
+                    jsonify({"message": "Token no longer valid"}), 401
+                )
 
         kwargs["current_user"] = data["user"]
         kwargs["is_admin"] = data.get("admin", False)

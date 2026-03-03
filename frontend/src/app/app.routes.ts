@@ -18,6 +18,7 @@ import { adminGuard } from './guards/admin-guard-guard';
 import { AdminUsers } from './components/admin-users/admin-users';
 import { AdminTechniques } from './components/admin-techniques/admin-techniques';
 import { AdminGyms } from './components/admin-gyms/admin-gyms';
+import { Banned } from './components/banned/banned';
 
 export const routes: Routes = [
     {
@@ -97,5 +98,9 @@ export const routes: Routes = [
         path: 'admin/gyms',
         component: AdminGyms,
         canActivate: [adminGuard]
+    },
+    {
+        path: 'banned',
+        component: Banned
     }
 ];

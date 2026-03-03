@@ -30,7 +30,7 @@ def top_techniques_route(current_user, is_admin):
 @jwt_required
 @admin_required
 def ban_user_route(user_id, current_user, is_admin):
-    return ban_user_controller(user_id)
+    return ban_user_controller(user_id, current_user)
 
 
 @admin_bp.route("/api/v1.0/admin/users/<string:user_id>/unban", methods=["PUT"])
