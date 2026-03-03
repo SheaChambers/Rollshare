@@ -8,7 +8,7 @@
     </button>
   </header>
 
-  <div class="main-tab-nav">
+  <div class="main-tab-nav" *ngIf="auth.isLoggedIn() && (auth.isAdmin() || technique?.created_by === auth.getUsername())">
     <button [class.active]="activeMainTab === 'details'" (click)="activeMainTab = 'details'">Details</button>
     <button [class.active]="activeMainTab === 'ai'" (click)="activeMainTab = 'ai'">AI Analysis</button>
   </div>

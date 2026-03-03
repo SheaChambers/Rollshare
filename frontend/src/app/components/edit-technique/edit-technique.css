@@ -85,6 +85,11 @@
     color: #d62828;
 }
 
+.input-error {
+  border: 1px solid #d62828 !important;
+  background-color: #fff8f8 !important;
+}
+
 .backend-error {
     margin-top: 8px;
     font-size: 1.2rem;

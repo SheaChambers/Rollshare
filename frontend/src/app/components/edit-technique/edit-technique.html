@@ -19,7 +19,7 @@
 
         <div class="form-group">
             <label>Technique Name</label>
-            <input class="form-input" type="text" formControlName="name">
+            <input class="form-input" type="text" formControlName="name" [class.input-error]="isInvalid('name')">
             <div class="error" *ngIf="isInvalid('name')">
                 Name must be between 3 and 50 characters.
             </div>
@@ -30,7 +30,7 @@
             <label>Category</label>
             <select class="form-input" formControlName="category">
                 <option value="">Select Category</option>
-                <option *ngFor="let c of allowedCategories" [value]="c.value">{{ c.label }}</option>
+                <option *ngFor="let c of allowedCategories" [value]="c.value" [class.input-error]="isInvalid('category')">{{ c.label }}</option>
             </select>
             <div class="error" *ngIf="isInvalid('category')">
                 Category is required.
@@ -42,7 +42,7 @@
             <label>Difficulty</label>
             <select class="form-input" formControlName="difficulty">
                 <option value="">Select difficulty</option>
-                <option *ngFor="let d of allowedDifficulties" [value]="d">{{ d }}</option>
+                <option *ngFor="let d of allowedDifficulties" [value]="d" [class.input-error]="isInvalid('difficulty')">{{ d }}</option>
             </select>
             <div class="error" *ngIf="isInvalid('difficulty')">
                 Difficulty is required.
@@ -52,7 +52,7 @@
         <!-- DESCRIPTION -->
         <div class="form-group">
             <label>Description</label>
-            <textarea class="form-input textarea" formControlName="description"></textarea>
+            <textarea class="form-input textarea" formControlName="description" [class.input-error]="isInvalid('description')"></textarea>
             <div class="error" *ngIf="isInvalid('description')">
                 Description must be between 10 and 500 characters.
             </div>

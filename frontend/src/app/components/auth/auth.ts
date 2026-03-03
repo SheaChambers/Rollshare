@@ -113,7 +113,7 @@ export class AuthComponent implements OnInit {
             return;
           }
           
-          this.router.navigate(['/techniques']);
+          this.router.navigate(['/']);
         },
         error: (err) => this.backendError = err.error?.error || "Invalid credentials"
       });

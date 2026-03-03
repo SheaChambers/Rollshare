@@ -1,5 +1,5 @@
 <div class="auth-container">
-  <div class="auth-tabs">
+  <div class="auth-tabs" *ngIf="!requires2FA">
     <button type="button" 
             [class.active]="isLoginMode" 
             (click)="toggleMode()">Login</button>
@@ -18,7 +18,8 @@
       
       <div class="form-group">
         <label for="username">Username*</label>
-        <input id="username" formControlName="username" class="form-input">
+        <input id="username" formControlName="username" class="form-input"
+                [class.input-error]="isInvalid('username')">
         <div class="error" *ngIf="isInvalid('username')">
           Username is required
         </div>
@@ -27,12 +28,17 @@
       <div class="form-group" *ngIf="!isLoginMode">
         <label for="email">Email*</label>
         <input type="email" id="email" formControlName="email" class="form-input"
-            placeholder="JohnDoe@yahoo.com">
+            placeholder="JohnDoe@yahoo.com"
+            [class.input-error]="isInvalid('email')">
+        <div class="error" *ngIf="isInvalid('email')">
+          Please enter a valid email address.
+        </div>
       </div>
 
       <div class="form-group">
         <label for="password">Password*</label>
-        <input type="password" id="password" formControlName="password" class="form-input">
+        <input type="password" id="password" formControlName="password" 
+                class="form-input" [class.input-error]="isInvalid('password')">
         <div class="error" *ngIf="isInvalid('password')">
           Password is required
         </div>
@@ -40,10 +46,14 @@
 
       <div class="form-group" *ngIf="!isLoginMode">
         <label for="confirm_password">Confirm Password*</label>
-            <input type="password"
-                id="confirm_password"
-                formControlName="confirm_password"
-                class="form-input">
+        <input type="password"
+            id="confirm_password"
+            formControlName="confirm_password"
+            class="form-input"
+            [class.input-error]="isInvalid('confirm_password')">
+        <div class="error" *ngIf="authForm.hasError('passwordMismatch') && authForm.get('confirm_password')?.touched">
+          Passwords do not match.
+        </div>
       </div>
 
       <div class="form-group" *ngIf="!isLoginMode">
@@ -69,6 +79,9 @@
         <label for="code">Enter 2FA Code</label>
         <input id="code" type="text" formControlName="code"
           class="form-input" placeholder="6-digit code">
+        <div class="error">
+          {{ backendError }}
+        </div>
       </div>
 
       <button type="submit" class="submit-btn" [disabled]="twoFaForm.invalid">

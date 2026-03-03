@@ -75,6 +75,11 @@
   cursor: pointer;
 }
 
+.input-error {
+  border: 1px solid #d62828 !important;
+  background-color: #fff8f8 !important;
+}
+
 .error { color: #c62828; font-size: 0.8rem; margin-top: 8px; }
 .error-box { background: #fee; color: #c62828; padding: 10px; border-radius: 8px; margin-top: 10px; text-align: center; }
 

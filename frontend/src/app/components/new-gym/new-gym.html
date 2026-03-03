@@ -9,7 +9,9 @@
     <!-- NAME -->
     <div class="form-group">
       <label>Gym Name</label>
-      <input class="form-input" type="text" formControlName="name" placeholder="e.g. Next Gen Belfast">
+      <input class="form-input" type="text" formControlName="name" 
+              placeholder="e.g. Next Gen Belfast"
+              [class.input-error]="isInvalid('name')">
       <div class="error" *ngIf="isInvalid('name')">
         Name must be between 3 and 80 characters.
       </div>
@@ -19,7 +21,8 @@
     <div class="form-group">
       <label>Address</label>
       <input class="form-input" type="text" formControlName="address"
-             placeholder="e.g. 123 Belfast Road, Belfast">
+             placeholder="e.g. 123 Belfast Road, Belfast"
+             [class.input-error]="isInvalid('address')">
       <div class="error" *ngIf="isInvalid('address')">
         Please enter a valid address.
       </div>
@@ -29,7 +32,9 @@
     <!-- PHONE -->
     <div class="form-group">
       <label>Phone</label>
-      <input class="form-input" type="text" formControlName="phone" placeholder="+44 28 9000 2222">
+      <input class="form-input" type="text" formControlName="phone" 
+              placeholder="+44 28 9000 2222"
+              [class.input-error]="isInvalid('phone')">
       <div class="error" *ngIf="isInvalid('phone')">
         Phone number is required.
       </div>
@@ -38,7 +43,9 @@
     <!-- EMAIL -->
     <div class="form-group">
       <label>Email</label>
-      <input class="form-input" type="email" formControlName="email" placeholder="contact@gym.com">
+      <input class="form-input" type="email" formControlName="email" 
+              placeholder="contact@gym.com" 
+              [class.input-error]="isInvalid('email')">
       <div class="error" *ngIf="isInvalid('email')">
         A valid email is required.
       </div>

@@ -8,8 +8,12 @@
     
     <div class="form-group">
       <label>Title</label>
-      <input type="text" formControlName="name" class="form-control" placeholder="e.g., Kimura from Side Control">
-      <small class="error-text" *ngIf="isInvalid('name')">Title is required (min 3 chars).</small>
+      <input type="text" formControlName="name" class="form-control" 
+              placeholder="e.g., Kimura from Side Control"
+              [class.input-error]="isInvalid('name')">
+      <div class="error-text" *ngIf="isInvalid('name')">
+        Title is required (min 3 chars).
+      </div>
     </div>
 
     <div class="row">
