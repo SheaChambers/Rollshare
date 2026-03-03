@@ -52,7 +52,7 @@ export class Admin {
   /* ===================== */
 
   goToUsers() {
-    this.router.navigate(['/admin/users']);
+    this.router.navigate(['/users']);
   }
 
   goToTechniques() {

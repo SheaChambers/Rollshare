@@ -30,7 +30,9 @@
             ],
             "styles": [
               "src/styles.css",
-              "./node_modules/leaflet/dist/leaflet.css"
+              "./node_modules/leaflet/dist/leaflet.css",
+              "./node_modules/ag-grid-community/styles/ag-grid.css",
+              "./node_modules/ag-grid-community/styles/ag-theme-quartz.css"
             ],
             "outputMode": "static",
             "ssr": false,

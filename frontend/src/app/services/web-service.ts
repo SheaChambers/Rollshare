@@ -583,9 +583,9 @@ export class WebService {
     )
   }
 
-  getAdminUsers() {
+  getAllUsers() {
     return this.http.get<any>(
-      this.baseUrl + 'admin/users',
+      this.baseUrl + 'users',
       { headers: this.auth.getAuthHeaders() }
     )
   }

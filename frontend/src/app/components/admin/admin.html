@@ -12,33 +12,33 @@
 
       <div class="stat-card">
         <span class="number">{{ overview.total_users }}</span>
-        <span class="label">Users</span>
+        <span class="label">{{ overview.total_users === 1 ? 'User' : 'Users' }}</span>
         <span class="sub">+{{ overview.new_users_this_week }} this week</span>
       </div>
 
       <div class="stat-card">
         <span class="number">{{ overview.total_techniques }}</span>
-        <span class="label">Techniques</span>
+        <span class="label">{{ overview.total_techniques === 1 ? 'Technique' : 'Techniques' }}</span>
       </div>
 
       <div class="stat-card">
         <span class="number">{{ overview.total_gyms }}</span>
-        <span class="label">Gyms</span>
+        <span class="label">{{ overview.total_gyms === 1 ? 'Gym' : 'Gyms'}}</span>
       </div>
 
       <div class="stat-card">
         <span class="number">{{ overview.total_reviews }}</span>
-        <span class="label">Reviews</span>
+        <span class="label">{{ overview.total_reviews === 1 ? 'Review' : 'Reviews' }}</span>
       </div>
 
       <div class="stat-card">
         <span class="number">{{ overview.total_likes }}</span>
-        <span class="label">Likes</span>
+        <span class="label">{{ overview.total_likes === 1 ? 'Like' : 'Likes'}}</span>
       </div>
 
       <div class="stat-card">
         <span class="number">{{ overview.total_saves }}</span>
-        <span class="label">Saves</span>
+        <span class="label">{{ overview.total_saves === 1 ? 'Save' : 'Saves' }}</span>
       </div>
 
     </div>
@@ -57,27 +57,21 @@
       <div class="moderation-card">
         <h3>Manage Users</h3>
         <button (click)="goToUsers()">View Users</button>
-        <button class="danger">Ban User</button>
       </div>
 
       <div class="moderation-card">
         <h3>Manage Techniques</h3>
         <button (click)="goToTechniques()">View Techniques</button>
-        <button>Mark as Featured</button>
-        <button class="danger">Delete Technique</button>
       </div>
 
       <div class="moderation-card">
         <h3>Manage Gyms</h3>
         <button (click)="goToGyms()">View Gyms</button>
-        <button>Verify Gym</button>
-        <button class="danger">Delete Gym</button>
       </div>
 
       <div class="moderation-card">
         <h3>Reviews</h3>
         <button>View All Reviews</button>
-        <button class="danger">Delete Review</button>
       </div>
 
     </div>
@@ -99,17 +93,7 @@
         <div class="leaderboard">
           <div class="leader-item" *ngFor="let t of topTechniques">
             <strong>{{ t.name }}</strong>
-            <span>❤️ {{ t.likes_count }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="analytics-card">
-        <h3>Most Active Users</h3>
-        <div class="leaderboard">
-          <div class="leader-item" *ngFor="let u of activeUsers">
-            <strong>{{ u.username }}</strong>
-            <span>{{ u.roll_count }} uploads</span>
+            <span>{{ t.likes_count }} {{ t.likes_count === 1 ? 'Like' : 'Likes'}}</span>
           </div>
         </div>
       </div>
