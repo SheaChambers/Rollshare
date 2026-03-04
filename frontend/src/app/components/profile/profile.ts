@@ -215,7 +215,16 @@ export class ProfileComponent implements OnInit {
   }
 
   deleteAccount() {
-    this.auth.logout();
-    this.router.navigate(['/']);
+    this.webService.deleteUser(this.userData._id).subscribe({
+      next: () => {
+        this.auth.logout();
+        this.router.navigate(['/']);
+        alert("Account successfully deleted.");
+      },
+      error: (err) => {
+        this.backendError = "Could not delete account. Please try again.";
+        console.error(err);
+      }
+    });
   }
 }
