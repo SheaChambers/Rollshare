@@ -21,17 +21,27 @@ h1 {
     align-items: center;
 }
 
-:host ::ng-deep .btn-danger {
+:host ::ng-deep .delete-btn {
     background-color: #e60f0f;
     color: white;
     border: none;
-    padding: 2px 12px;
+    padding: 2px 8px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 800;
 }
 
-:host ::ng-deep .btn-primary {
+:host ::ng-deep .feature-btn {
+    background-color: #06b80b;
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+:host ::ng-deep .view-btn {
     background-color: #1f5fbf;
     color: white;
     border: none;

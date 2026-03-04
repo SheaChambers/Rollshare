@@ -25,9 +25,19 @@ export class AdminTechniques {
   paginationPageSizeSelector = [10, 25, 50];
 
   columnDefs: ColDef[] = [
-    { field: "name", flex: 2, minWidth: 120, filter: true },
-    { field: "created_by", hide: window.innerWidth < 400, flex: 3 },
-    { field: "created_at", hide: window.innerWidth < 400, flex: 3, filter: true },
+    { field: "name", flex: 2, minWidth: 110, filter: true },
+    { field: "created_by", minWidth: 50, hide: window.innerWidth < 400, flex: 3 },
+    { field: "created_at", hide: window.innerWidth < 600, flex: 3, filter: true },
+    {
+      field: "featured",
+      headerName: "Featured",
+      maxWidth: 100,
+      minWidth: 65,
+      flex: 2,
+      hide: window.innerWidth < 400,
+      cellRenderer: (params: any) =>
+        params.value ? "Yes" : "No"
+    },
     {
       headerName: "Actions",
       cellRenderer: (params: any) => {
@@ -37,15 +47,22 @@ export class AdminTechniques {
 
         const viewBtn = document.createElement("button");
         viewBtn.innerText = "View";
-        viewBtn.className = "btn-primary";
+        viewBtn.className = "view-btn";
         viewBtn.onclick = () => this.router.navigate(['/techniques/' + params.data._id]);
 
+        const featureBtn = document.createElement("button");
+        featureBtn.innerText = "Feature";
+        featureBtn.className = "feature-btn";
+        featureBtn.onclick = () =>
+          this.featureTechnique(params.data);
+
         const delBtn = document.createElement("button");
-        delBtn.innerText = "Delete";
-        delBtn.className = "btn-danger";
+        delBtn.innerText = "X";
+        delBtn.className = "delete-btn";
         delBtn.onclick = () => this.deleteTechnique(params.data._id);
 
         container.appendChild(viewBtn);
+        container.appendChild(featureBtn);
         container.appendChild(delBtn);
         return container;
       }
@@ -61,6 +78,24 @@ export class AdminTechniques {
   loadTechniques() {
     this.webService.getAllAdminTechniques().subscribe((data: any) => {
       this.rowData = data;
+    });
+  }
+
+  featureTechnique(technique: any) {
+
+    if (!confirm(`Feature "${technique.name}" on the homepage?`)) return;
+
+    this.webService.addFeaturedTechnique(technique._id)
+    .subscribe(() => {
+
+      this.rowData.forEach(t => t.featured = false);
+
+      technique.featured = true;
+
+      this.agGrid.api.applyTransaction({
+        update: this.rowData
+      });
+
     });
   }
 

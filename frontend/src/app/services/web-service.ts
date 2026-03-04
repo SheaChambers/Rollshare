@@ -635,7 +635,7 @@ export class WebService {
 
   addFeaturedTechnique(techniqueId: string) {
     return this.http.put<any>(
-      this.baseUrl + 'admin/techniques/' + techniqueId + 'feature',
+      this.baseUrl + 'admin/techniques/' + techniqueId + '/feature',
       {},
       { headers: this.auth.getAuthHeaders() }
     )

@@ -140,7 +140,7 @@ export class AuthComponent implements OnInit {
       code: this.twoFaForm.value.code
     }).subscribe({
       next: () => {
-        this.router.navigate(['/techniques']);
+        this.router.navigate(['/']);
       },
       error: (err) =>
         this.backendError = err.error?.error || "Invalid 2FA code"

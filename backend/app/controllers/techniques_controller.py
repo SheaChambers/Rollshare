@@ -241,6 +241,18 @@ def get_featured_technique():
 
     tech["_id"] = str(tech["_id"])
 
+    storage = BlobStorageService()
+
+    if tech.get("thumbnail_blob_url"):
+        tech["thumbnail_blob_url"] = storage.generate_read_url(
+            tech["thumbnail_blob_url"]
+        )
+
+    if tech.get("video_blob_url"):
+        tech["video_blob_url"] = storage.generate_read_url(
+            tech["video_blob_url"]
+        )
+
     if "reviews" in tech:
         for r in tech["reviews"]:
             if "_id" in r:
