@@ -65,17 +65,29 @@ export class Community {
         const data = Array.isArray(response) ? response : response.techniques;
 
         if (this.auth.isLoggedIn()) {
-          this.webService.getSavedTechniques().subscribe({next: (saved) => {
-            const savedList = Array.isArray(saved) ? saved : (saved.techniques || []);
-            const savedIds = savedList.map((s: any) => s._id);
-            
-            this.communityPosts = data.map((post: any) => ({
-              ...post,
-              _id: post._id.toString(),
-              isSaved: savedIds.includes(post._id)
-            }));
-            this.isLoading = false;
-          }});
+          this.webService.getSavedTechniques().subscribe({
+            next: (saved) => {
+              const savedList = Array.isArray(saved) ? saved : (saved.techniques || []);
+              const savedIds = savedList.map((s: any) => s._id);
+              
+              this.communityPosts = data.map((post: any) => ({
+                ...post,
+                _id: post._id.toString(),
+                isSaved: savedIds.includes(post._id)
+              }));
+              this.isLoading = false;
+            },
+            error: () => {
+              this.communityPosts = data;
+              this.isLoading = false;
+            }
+          });
+        } else {
+          this.communityPosts = data.map((post: any) => ({
+            ...post,
+            isSaved: false
+          }));
+          this.isLoading = false;
         }
       },
       error: (err) => {

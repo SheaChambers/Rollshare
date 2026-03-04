@@ -50,7 +50,12 @@ export class Home {
     this.webService.getFeaturedTechnique().subscribe({
       next: (data: any) => {
         this.featuredTechnique = data;
-        this.checkIfSaved(this.featuredTechnique._id);
+        if (this.auth.isLoggedIn()) {
+          this.checkIfSaved(this.featuredTechnique._id);
+        } else {
+          this.featuredTechnique.isSaved = false;
+        }
+        
         this.isLoading = false;
       },
       error: () => {
