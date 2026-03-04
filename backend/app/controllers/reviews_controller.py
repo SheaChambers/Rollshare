@@ -86,7 +86,11 @@ def edit_review(technique_id: str, review_id: str, current_user: str, is_admin: 
     if not doc or "reviews" not in doc or len(doc["reviews"]) == 0:
         return jsonify({"error": "Review not found"}), 404
 
-    review = doc["reviews"][0]
+    matching_reviews = [r for r in doc["reviews"] if str(r["_id"]) == review_id]
+    if not matching_reviews:
+        return jsonify({"error": "Review not found in list"}), 404
+        
+    review = matching_reviews[0]
     if not is_admin and review.get("user") != current_user:
         return jsonify({"error": "Not authorised"}), 403
 
