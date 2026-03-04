@@ -142,7 +142,10 @@ export class EditGym {
     };
 
     this.webService.editGym(this.gymId, payload).subscribe({
-      next: () => this.router.navigate(['/gyms', this.gymId]),
+      next: () => this.router.navigate(
+        ['/gyms', this.gymId],
+        {replaceUrl: true}
+      ),
       error: (err) => {
         this.backendError = err.error?.error || "Update failed.";
       }
@@ -175,6 +178,9 @@ export class EditGym {
    * Cancels editing and returns to the gym listing page.
    */
   cancel() {
-    this.router.navigate(['/gyms', this.gymId]);
+    this.router.navigate(
+      ['/gyms', this.gymId],
+      {replaceUrl: true}
+    );
   }
 }

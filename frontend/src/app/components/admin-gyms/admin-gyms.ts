@@ -26,9 +26,9 @@ export class AdminGyms {
 
   columnDefs: ColDef[] = [
     { field: "name", flex: 2, filter: true },
-    { field: "address", flex: 3 },
-    { field: "created_by", headerName: "Owner", flex: 1 },
-    { field: "review_count", headerName: "Reviews", width: 110 },
+    { field: "address", flex: 3, hide: window.innerWidth < 600 },
+    { field: "created_by", headerName: "Owner", flex: 1, hide: window.innerWidth < 600 },
+    { field: "review_count", headerName: "Reviews", width: 70 },
     {
       field: "verified",
       headerName: "Verified",

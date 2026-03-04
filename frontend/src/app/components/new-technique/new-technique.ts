@@ -79,7 +79,10 @@ export class NewTechnique implements OnInit {
     this.webService.postTechnique(data).subscribe({
       next: (res) => {
         this.isSubmitting = false;
-        this.router.navigate(['/techniques', res.id]);
+        this.router.navigate(
+          ['/techniques', res.id],
+          {replaceUrl: true}
+        );
       },
       error: (err) => {
         this.isSubmitting = false;

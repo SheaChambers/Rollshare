@@ -7,6 +7,12 @@
       <img class="gym-thumbnail"
             [src]="getGymThumbnail()"
             alt="Gym Photo">
+
+      <div class="verification-pill"
+          [class.verified]="gym.verified"
+          [class.unverified]="!gym.verified">
+        {{ gym.verified ? 'Verified' : 'Unverified' }}
+      </div>
     </div>
 
     <!-- TITLE + LOCATION -->
@@ -18,9 +24,15 @@
     </div>
 
     <!-- RATING -->
-    <div class="rating-row" *ngIf="gym.reviews?.length">
-      <img src="assets/images/star.png" class="star-icon" *ngFor="let s of getStars()">
-      <span class="rating-count">({{ gym.reviews.length }})</span>
+    <div class="rating-row">
+      <ng-container *ngIf="gym.reviews?.length; else noReviews">
+        <img src="assets/images/star.png" class="star-icon" *ngFor="let s of getStars()">
+        <span class="rating-count">({{ gym.reviews.length }})</span>
+      </ng-container>
+      
+      <ng-template #noReviews>
+        <span class="no-rating-text">New Gym (No reviews)</span>
+      </ng-template>
     </div>
 
     <!-- CONTACT -->

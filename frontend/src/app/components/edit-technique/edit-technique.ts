@@ -118,7 +118,10 @@ export class EditTechnique {
     };
 
     this.webService.editTechnique(this.techniqueId, this.editForm.value).subscribe({
-      next: () => this.router.navigate(['/techniques/' + this.techniqueId]),
+      next: () => this.router.navigate(
+        ['/techniques/' + this.techniqueId],
+        {replaceUrl: true}
+      ),
       error: (err: any) => {
         this.backendError = err.error?.error || "Update failed.";
       }
@@ -145,6 +148,9 @@ export class EditTechnique {
 
   /** Navigates back to the techniques list */
   cancel() {
-    this.router.navigate(['/techniques/' + this.techniqueId]);
+    this.router.navigate(
+      ['/techniques/' + this.techniqueId], 
+      {replaceUrl: true}
+    );
   }
 }
