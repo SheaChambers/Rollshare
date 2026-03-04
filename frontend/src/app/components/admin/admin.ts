@@ -62,29 +62,4 @@ export class Admin {
   goToGyms() {
     this.router.navigate(['/admin/gyms']);
   }
-
-  /* ===================== */
-  /* FUTURE MODERATION ACTIONS */
-  /* ===================== */
-
-  markTechniqueFeatured(id: string) {
-    this.webService.addFeaturedTechnique(id).subscribe(() => {
-      this.loadDashboard();
-    });
-  }
-
-  /*verifyGym(id: string) {
-    this.webService.verifyGym(id).subscribe(() => {
-      this.loadDashboard();
-    });
-  }*/
-
-  banUser(id: string) {
-    if (!confirm('Are you sure you want to ban this user?')) return;
-
-    this.webService.banUser(id).subscribe(() => {
-      this.loadDashboard();
-    });
-  }
-
 }
